@@ -165,7 +165,7 @@ public class LanguageFactory {
 		LANG_TYPESCRIPT.extension = ".ts";
 		LANG_TYPESCRIPT.isCompilable = true;
 		LANG_TYPESCRIPT.isRunnable = true;
-		LANG_TYPESCRIPT.compileCommand = "ntsc <name>.ts";
+		LANG_TYPESCRIPT.compileCommand = "tsc <name>.ts";
 		LANG_TYPESCRIPT.runCommand = "node <name>.js";
 		LANG_TYPESCRIPT.quickCode ="class Greeter {\n\tconstructor(public greeting: string) { }\n\tgreet() {\n\t\treturn \"<h1>\" + this.greeting + \"</h1>\";\n\t}\n};\n\nvar greeter = new Greeter(\"Hello World!\");\nvar str = greeter.greet();";
 		LANG_TYPESCRIPT.extensionFilter = new ExtensionFilter("TypeScript (*.ts)", "*" + LANG_TYPESCRIPT.extension);

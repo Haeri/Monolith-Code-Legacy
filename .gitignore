@@ -51,3 +51,5 @@ local.properties
 
 # Monolith Code files
 config.ini
+.classpath
+.project

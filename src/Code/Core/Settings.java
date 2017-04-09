@@ -34,6 +34,7 @@ public class Settings {
 	private boolean isConsole;
 	private boolean isLineNumbers;
 	private boolean isCodeFolding;	
+	private int backupMaxSaveDays;
 	
 	// Defaults
 	public static final int DEF_LAST_X = -1;
@@ -47,6 +48,7 @@ public class Settings {
 	public static final boolean DEF_IS_LINE_NUMBERS = true;
 	public static final boolean DEF_IS_CODE_FOLDING = false;
 	public static final Font DEF_FONT = new Font("Consolas", Font.PLAIN, DEF_FONT_SIZE);
+	public static final int DEF_BACKUP_MAX_SAVE_DAYS = 30;	
 	
 	public static final String DEF_THEME = "Default";
 
@@ -75,6 +77,7 @@ public class Settings {
 				isCodeFolding = Boolean.parseBoolean(config.getProperty("is_code_folding", DEF_IS_CODE_FOLDING + ""));
 				font = new Font(config.getProperty("font", DEF_FONT + ""), Font.PLAIN, DEF_FONT_SIZE);
 				theme = config.getProperty("theme", DEF_THEME + "");
+				backupMaxSaveDays = Integer.parseInt(config.getProperty("backup_max_save_days", DEF_BACKUP_MAX_SAVE_DAYS + ""));
 						
 			} catch (IOException e) {
 				console.println("Could not read From cofig!\n" + e.getMessage(), Console.err);
@@ -94,6 +97,7 @@ public class Settings {
 			setCodeFolding(DEF_IS_CODE_FOLDING);
 			setFont(DEF_FONT);
 			setTheme(DEF_THEME);
+			setBackupMaxSaveDays(DEF_BACKUP_MAX_SAVE_DAYS);
 			
 			saveConfig();
 		}
@@ -257,11 +261,19 @@ public class Settings {
 		makeMeMaster();
 	}
 
+	public int getBackupMaxSaveDays() {
+		return backupMaxSaveDays;
+	}
+	
+	public void setBackupMaxSaveDays(int days) {
+		config.setProperty("backup_max_save_days", "" + days);
+		this.backupMaxSaveDays = days;
+		makeMeMaster();
+	}
 
 	public boolean isLineNumbers() {
 		return isLineNumbers;
 	}
-
 
 	public void setLineNumbers(boolean isLineNumbers) {
 		config.setProperty("is_line_numbers", "" + isLineNumbers);
@@ -277,6 +289,5 @@ public class Settings {
 		config.setProperty("is_code_folding", "" + isCodeFolding);
 		this.isCodeFolding = isCodeFolding;
 		masterInstance = this;
-	}
-
+	}	
 }

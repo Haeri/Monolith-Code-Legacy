@@ -241,9 +241,31 @@ public class Console extends JPanel{
 			}else{
 				println("Invalid value!", Console.err);
 			}
+		}else if(in.matches("max_days = (.*)")){
+			Pattern p = Pattern.compile("max_days = (.*)");
+			Matcher m = p.matcher(in);
+			m.find();
+			String src = m.group(1);
+			
+			//Read value
+			int value;
+			try{				
+				value = Integer.parseInt(src);
+			}catch(Exception e){
+				println("Invalid input!", Console.err);
+				if(GlobalVariables.debug) e.printStackTrace();
+				return;
+			}
+			
+			//Check if value legal
+			if(value >= 0 && value <= 128){
+				parent.settings.setBackupMaxSaveDays(value);				
+				println("Maximum backup days set to " + src);
+			}else{
+				println("Invalid value!", Console.err);
+			}
 		}
-	}
-	
+	}	
 	public void down(){
 		vertical = conScroll.getVerticalScrollBar();
 		vertical.setValue( vertical.getMaximum());

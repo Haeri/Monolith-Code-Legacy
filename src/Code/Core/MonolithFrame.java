@@ -85,6 +85,7 @@ import org.fife.ui.rtextarea.SearchEngine;
 
 import Code.CodeBuilder.BuildConsole;
 import Code.CodeBuilder.CodeBuilder;
+import Code.Components.BackgroundSave;
 import Code.Components.ColorPlus;
 import Code.Components.Expression;
 import Code.Components.FileExplorer;
@@ -141,7 +142,8 @@ public class MonolithFrame extends JFramePlus {
 	private BuildConsole buildConsole;
 	private Document document;
 	public Settings settings;
-
+	private BackgroundSave backgroundSave;
+	
 	// Primitives
 	private int chars = 0;
 	private int dividerLocation = 0;
@@ -507,6 +509,10 @@ public class MonolithFrame extends JFramePlus {
 
 		// After Pack
 		updateMargin();
+		
+		// Start BackupTimer
+		backgroundSave = new BackgroundSave(this);
+		backgroundSave.start();
 
 		// SHORTCUTS
 
@@ -1762,6 +1768,9 @@ public class MonolithFrame extends JFramePlus {
 				close = false;
 			}
 		}
+
+		// Background save
+		backgroundSave.save();
 
 		// Save window size
 		settings.saveWindow(getX(), getY(), getWidth(), getHeight());
