@@ -104,6 +104,7 @@ import Code.Dialog.SymbolDialog;
 import Code.JavaFX.SynchronousJFXFileChooser;
 import Code.Languages.Language;
 import Code.Languages.LanguageFactory;
+import Code.Updater.Updater;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.stage.FileChooser;
@@ -119,7 +120,8 @@ public class MonolithFrame extends JFramePlus {
 
 	private JLabel leftLabel, rightLabel;
 	private JViewport tFieldVievport;
-	private JPanelPlus bottomPanel;
+	private JPanelPlus bottomLabelPanel;
+	private JPanel bottomPanel;
 	private RTextScrollPane tScrollPane;
 	private JButton pin;
 	private JMenuBar tMenuBar;
@@ -129,7 +131,7 @@ public class MonolithFrame extends JFramePlus {
 						mSymbol,
 						mSettings, mFind, mCode, mMath, mBin, mBinInv, mTable,
 						mBuild, mRun, mBuildRun, mBuildRunNew, 
-						mHelp,
+						mUpdate, mHelp,
 						mToInt, mCrypt, mDeCrypt;
 	private JRadioButtonMenuItem[] languageButtons;
 	private JCheckBoxMenuItem mCon, mPgrp, mLineB;
@@ -159,6 +161,7 @@ public class MonolithFrame extends JFramePlus {
 	public boolean buildNew;
 
 	private boolean isPin;
+	private static boolean isFirst = true;
 
 	// Defaults
 	private	final ExtensionFilter EXTENSION_FILTER_ALL = new ExtensionFilter("All Files", "*.*");
@@ -167,7 +170,7 @@ public class MonolithFrame extends JFramePlus {
 
 	// Icons
 	private static final ImageIcon icon = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon.png"));
-	private static ImageIcon iSave, iSaveas, iCode, iBinary, iPinUp, iPinDown, iOpen, iNew, iNewFork, iExit, iTable, iEarth, gifLoading, iInfo, iBuildRunNew;
+	private static ImageIcon iSave, iSaveas, iCode, iBinary, iPinUp, iPinDown, iOpen, iNew, iNewFork, iExit, iTable, iEarth, gifLoading, iUpdate, iInfo, iBuildRunNew;
 	public static ImageIcon iUndo, iRedo, iCut, iCopy, iPaste, iFind, iCog, iRun, iMath, iStop, iBuild, iBuildRun, iBuildConfig;
 
 	
@@ -398,8 +401,11 @@ public class MonolithFrame extends JFramePlus {
 		mbBuild.add(mBuildRunNew);
 		
 		// HELP
+		mUpdate = new JMenuItem("Check for Updates");
+		mUpdate.setIcon(iUpdate);
 		mHelp = new JMenuItem("About Monolith");
 		mHelp.setIcon(iInfo);
+		mbHelp.add(mUpdate);
 		mbHelp.add(mHelp);
 
 		// DBug
@@ -424,13 +430,23 @@ public class MonolithFrame extends JFramePlus {
 		leftLabel.setForeground(AppTheme.UI_LABEL_FG);
 		rightLabel.setForeground(AppTheme.UI_LABEL_FG);
 
+		// Status Bar
+		stat = new StatusBar();
+		stat.setPreferredSize(new Dimension(0, 4));
+
+		// Bottom Label Panel
+		bottomLabelPanel = new JPanelPlus();
+		bottomLabelPanel.setPanelColor(AppTheme.BOTTOM_PANEL_BG);
+		bottomLabelPanel.setLayout(new BorderLayout());
+		bottomLabelPanel.setBorder(new EmptyBorder(6, 12, 2, 12));
+		bottomLabelPanel.add(leftLabel, BorderLayout.LINE_START);
+		bottomLabelPanel.add(rightLabel, BorderLayout.LINE_END);
+		
 		// BottomPane
-		bottomPanel = new JPanelPlus();
-		bottomPanel.setPanelColor(AppTheme.BOTTOM_PANEL_BG);
+		bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BorderLayout());
-		bottomPanel.setBorder(new EmptyBorder(6, 12, 6, 12));
-		bottomPanel.add(leftLabel, BorderLayout.LINE_START);
-		bottomPanel.add(rightLabel, BorderLayout.LINE_END);
+		bottomPanel.add(bottomLabelPanel, BorderLayout.NORTH);
+		bottomPanel.add(stat, BorderLayout.SOUTH);
 		getContentPane().add(bottomPanel, BorderLayout.PAGE_END);
 
 		// TextArea
@@ -438,7 +454,7 @@ public class MonolithFrame extends JFramePlus {
 		tField.setText("");
 		tField.setFont(settings.getFont());
 		tField.setTabSize(settings.getTabSize());
-		tField.setBorder(new EmptyBorder(6, 12, 6, 12));
+		tField.setBorder(new EmptyBorder(2, 12, 6, 12));
 		tField.setDragEnabled(true);
 		
 		tField.setPopupMenu(new RMBMenu(this));
@@ -451,12 +467,8 @@ public class MonolithFrame extends JFramePlus {
 		// ScrollPane
 		tScrollPane = new RTextScrollPane(tField);
 		tScrollPane.setBorder(BorderFactory.createEmptyBorder());
-
-		// Status Bar
-		stat = new StatusBar();
-		stat.setPreferredSize(new Dimension(0, 3));
-		getContentPane().add(stat, BorderLayout.NORTH);
 		tScrollPane.getVerticalScrollBar().setUnitIncrement(6);
+
 
 		// Gutter
 		jvp = tScrollPane.getRowHeader();
@@ -504,11 +516,11 @@ public class MonolithFrame extends JFramePlus {
 			setSize(new Dimension(settings.getWidth(), settings.getHeight()));
 			setLocation(settings.getLastX(), settings.getLastY());
 		}
-		tField.requestFocus();
-		setVisible(true);
 
 		// After Pack
 		updateMargin();
+		tField.requestFocus();		
+		setVisible(true);
 		
 		// Start BackupTimer
 		backgroundSave = new BackgroundSave(this);
@@ -571,7 +583,7 @@ public class MonolithFrame extends JFramePlus {
 		mSymbol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		// Console
-		mCon.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+		mCon.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
 				((Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() | InputEvent.SHIFT_MASK))));
 		
 		
@@ -865,12 +877,22 @@ public class MonolithFrame extends JFramePlus {
 
 		// HELP
 		
+		// Check for updates
+		mUpdate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				updateMonolith(false);
+			}
+		});
+		
 		// Help
 		mHelp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				JOptionPane.showMessageDialog(MonolithFrame.this,
-						GlobalVariables.MONOLITH_NAME + " \nby Haeri Studios (c)\nFor more information\nvisit www.haeri.jimdo.com", GlobalVariables.MONOLITH_NAME,
+				JOptionPane.showMessageDialog(
+						MonolithFrame.this,
+						"<html><b>" + GlobalVariables.MONOLITH_NAME + " v" + GlobalVariables.VERSION + ":" + GlobalVariables.BUILD + "</b><br> by Haeri Studios &#9400;<br>For more information visit <br><a href='monolith-code-net'>monolith-code.net</a></html>",
+						GlobalVariables.MONOLITH_NAME,
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -1093,6 +1115,26 @@ public class MonolithFrame extends JFramePlus {
 		// Finished initializing
 		if (path != null) {
 			readFromFile(path);
+		}
+		
+		// Check for updates
+		if (isFirst) {
+			isFirst = false;
+			if (Updater.checkUpdate(this))
+				updateMonolith(true);
+		}
+	}
+	
+	// Update
+	public void updateMonolith(boolean directInstall) {
+		try {
+			if (directInstall)
+				Runtime.getRuntime().exec("java -jar Updater.jar " + GlobalVariables.VERSION + " " + GlobalVariables.BUILD + " true");
+			else
+				Runtime.getRuntime().exec("java -jar Updater.jar " + GlobalVariables.VERSION + " " + GlobalVariables.BUILD + " false");
+		} catch (IOException e) {
+			console.println(e.getMessage(), Console.err);
+			if(GlobalVariables.debug) e.printStackTrace();
 		}
 	}
 
@@ -1492,15 +1534,15 @@ public class MonolithFrame extends JFramePlus {
 	 * @param size - int size to be set
 	 */
 	public void setFontSize(int size) {
-		settings.setFontSize(size);;
+		settings.setFontSize(size);
 		String tempFont = tField.getFont().getFontName();
 		int tempStyle = tField.getFont().getStyle();
 		tField.setFont(new Font(tempFont, tempStyle, size));
 		gutter.setLineNumberFont(new Font(tempFont, tempStyle, size));
 		
-		setTabSize(settings.getTabSize());
-		updateMargin();
-		repaint();
+		//setTabSize(settings.getTabSize());
+		//updateMargin();
+		//repaint();
 	}
 
 	/**
@@ -1514,8 +1556,8 @@ public class MonolithFrame extends JFramePlus {
 		tField.setFont(settings.getFont());
 		gutter.setLineNumberFont(settings.getFont());
 		
-		updateMargin();
-		repaint();
+		//updateMargin();
+		//repaint();
 	}
 	
 	/**
@@ -1581,7 +1623,7 @@ public class MonolithFrame extends JFramePlus {
 			tScrollPane.setCorner(ScrollPaneConstants.LOWER_LEFT_CORNER, left);
 			
 			
-			bottomPanel.setPanelColor(theme.gutterBackgroundColor);
+			bottomLabelPanel.setPanelColor(theme.gutterBackgroundColor);
 			leftLabel.setForeground(theme.lineNumberColor);
 			rightLabel.setForeground(theme.lineNumberColor);
 		}
@@ -1934,6 +1976,7 @@ public class MonolithFrame extends JFramePlus {
 		iBuildRun = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/buildRun.png"));
 		iBuildRunNew = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/buildRunNew.png"));
 		iBuildConfig = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/buildConfig.png"));
+		iUpdate = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/update.png"));
 		
 		iFind = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/find.png"));
 		iCog = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/cog.png"));

@@ -22,6 +22,7 @@ public class LanguageFactory {
 	public static Language LANG_HTML;
 	public static Language LANG_CSS;
 	public static Language LANG_XML;
+	public static Language LANG_SQL;
 	
 	public static List<Language> languages;
 	
@@ -151,8 +152,9 @@ public class LanguageFactory {
 		LANG_JAVASCRIPT = new Language();
 		LANG_JAVASCRIPT.name = "JavaScript";
 		LANG_JAVASCRIPT.extension = ".js";
-		LANG_JAVASCRIPT.isCompilable = true;
+		LANG_JAVASCRIPT.isCompilable = false;
 		LANG_JAVASCRIPT.isRunnable = true;
+		LANG_JAVASCRIPT.runCommand = "node <name>.js";
 		LANG_JAVASCRIPT.quickCode ="console.log(\"Hello world\");";
 		LANG_JAVASCRIPT.extensionFilter = new ExtensionFilter("JavaScript (*.js)", "*" + LANG_JAVASCRIPT.extension);
 		LANG_JAVASCRIPT.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
@@ -165,7 +167,7 @@ public class LanguageFactory {
 		LANG_TYPESCRIPT.extension = ".ts";
 		LANG_TYPESCRIPT.isCompilable = true;
 		LANG_TYPESCRIPT.isRunnable = true;
-		LANG_TYPESCRIPT.compileCommand = "tsc <name>.ts";
+		LANG_TYPESCRIPT.compileCommand = "tsc.cmd greet.ts <name>.ts";
 		LANG_TYPESCRIPT.runCommand = "node <name>.js";
 		LANG_TYPESCRIPT.quickCode ="class Greeter {\n\tconstructor(public greeting: string) { }\n\tgreet() {\n\t\treturn \"<h1>\" + this.greeting + \"</h1>\";\n\t}\n};\n\nvar greeter = new Greeter(\"Hello World!\");\nvar str = greeter.greet();";
 		LANG_TYPESCRIPT.extensionFilter = new ExtensionFilter("TypeScript (*.ts)", "*" + LANG_TYPESCRIPT.extension);
@@ -217,6 +219,18 @@ public class LanguageFactory {
 		LANG_PHP.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_XML;
 		LANG_PHP.defaultSugetedName = "MyPHPCode" + LANG_PHP.extension;
 		languages.add(LANG_PHP);
+		
+		// SQL
+		LANG_SQL = new Language();
+		LANG_SQL.name = "SQL";
+		LANG_SQL.extension = ".mdf";
+		LANG_SQL.isCompilable = false;
+		LANG_SQL.isRunnable = false;
+		LANG_SQL.extensionFilter = new ExtensionFilter("SQL File (*.mdf)", "*" + LANG_SQL.extension);
+		LANG_SQL.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_SQL;
+		LANG_SQL.defaultSugetedName = "MySQLCode" + LANG_SQL.extension;
+		languages.add(LANG_SQL);
+
 		
 		
 		for(int i = 0; i < languages.size(); i++){

@@ -13,10 +13,10 @@ import javax.swing.Timer;
 public class StatusBar extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	
-	private final Color CONFIRM = new Color(68, 207, 68);
-	private final Color WARN = new Color(255, 204, 77);
-	private final Color ERROR = new Color(238, 64, 58);
-	private final Color PROCEDE = new Color(51, 122, 183);
+	private final Color CONFIRM = new Color(0, 224, 15);
+	private final Color WARN = new Color(255, 152, 0);
+	private final Color ERROR = new Color(249, 54, 47);
+	private final Color PROCEDE = new Color(9, 67, 224);
 	
 	int width;
 	int height;
