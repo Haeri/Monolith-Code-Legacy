@@ -25,7 +25,7 @@ import Code.Console.Console;
 import Code.Languages.Language;
 import Code.Core.GlobalVariables;
 import Code.Core.MonolithFrame;
-import Code.Dialog.SettingsDialog;
+import Code.Dialog.CustomBuildRunDialog;
 
 public class BuildConsole extends Console{
 
@@ -134,7 +134,7 @@ public class BuildConsole extends Console{
 		btEdit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new SettingsDialog(parent);
+				new CustomBuildRunDialog(frame, language, fullname, path);
 			}
         });
 		

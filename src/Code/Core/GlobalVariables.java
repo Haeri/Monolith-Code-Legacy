@@ -2,12 +2,13 @@ package Code.Core;
 
 public class GlobalVariables {
 
+	
 	private GlobalVariables(){}
 	
 	// Version
 	public static final String MONOLITH_NAME = "Monolith Code";
-	public static final String VERSION = "0.0.3";
-	public static final int BUILD = 10;
+	public static final String VERSION = "0.0.4";
+	public static final int BUILD = 21;
 	public static boolean BETA = true;
 	
 	// Paths
@@ -22,4 +23,6 @@ public class GlobalVariables {
 
 	// Misc
 	public static boolean debug = false;
+	public static String osName = "";
+	public static OSType osType;
 }

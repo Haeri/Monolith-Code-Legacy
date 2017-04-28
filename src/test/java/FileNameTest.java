@@ -15,7 +15,7 @@ public class FileNameTest {
 			mf.setLang(l);
 			mf.setText("Hello");
 			mf.fullName = mf.suggetFileName();
-			mf.path = "C:\\UserFiles\\Dropbox\\Eclipse Projects\\MonolithTextEditor\\src\\";
+			mf.path = "C:\\Users\\haeri\\Desktop\\s\\";
 			mf.saveFile(false);
 		} 
 	}

@@ -27,6 +27,7 @@ public class BackgroundSave extends Thread {
 
 	private int SAVE_INTERVAL = 600000;
 	private int MIN_KEEP_NUMBER = 5;
+	private final String FILE_EXTENSION = ".mc";
 
 	private List<SaveFile> saveFiles;
 	private MonolithFrame motherFrame;
@@ -145,7 +146,7 @@ public class BackgroundSave extends Thread {
 			String name = motherFrame.getFullName();
 			dir.mkdir();
 			String timeStamp = new SimpleDateFormat("dd.MM.yyy_HH.mm").format(Calendar.getInstance().getTime());
-			FileExplorer bgSave = new FileExplorer(GlobalVariables.AUTOSAVE_PATH + "/", name + "_" + timeStamp + ".mt", store);
+			FileExplorer bgSave = new FileExplorer(GlobalVariables.AUTOSAVE_PATH + "/", name + "_" + timeStamp + FILE_EXTENSION, store);
 			try {
 				bgSave.writeFile();
 			} catch (FileNotFoundException e) {

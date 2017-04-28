@@ -6,8 +6,8 @@ public class Language {
 	
 	public String name;
 	public String extension;
-	public String compileCommand;
-	public String runCommand;
+	public String[] compileCommand = new String[4];
+	public String[] runCommand = new String[4];
 	public String quickCode;
 	public String defaultSugetedName;
 	private NameSuggeseter ns;
@@ -29,7 +29,7 @@ public class Language {
 	}
 	
 	public String suggestName(String text){
-		if(ns != null)
+		if(ns != null && !ns.generateFileName(text).equals(extension))
 			return ns.generateFileName(text);
 		else
 			return defaultSugetedName; 

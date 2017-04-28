@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
+import Code.Core.OSType;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 public class LanguageFactory {
@@ -54,8 +55,8 @@ public class LanguageFactory {
 		LANG_C = new Language();
 		LANG_C.name = "C";
 		LANG_C.extension = ".c";
-		LANG_C.compileCommand = "gcc <name>.c -o <name>";
-		LANG_C.runCommand = "<path><name>";
+		LANG_C.compileCommand[OSType.ANY.ordinal()] = "gcc <name>.c -o <name>";
+		LANG_C.runCommand[OSType.ANY.ordinal()] = "<path><name>";
 		LANG_C.isCompilable = true;
 		LANG_C.isRunnable = true;
 		LANG_C.quickCode = "#include <stdio.h>\n\nint main(){\n\tprintf(\"Hello World!\\n\");\n\treturn 0;\n}";
@@ -68,8 +69,8 @@ public class LanguageFactory {
 		LANG_CPP = new Language();
 		LANG_CPP.name = "C++";
 		LANG_CPP.extension = ".cpp";
-		LANG_CPP.compileCommand = "g++ -std=c++11 <name>.cpp -o <name>";
-		LANG_CPP.runCommand = "<path><name>";
+		LANG_CPP.compileCommand[OSType.ANY.ordinal()] = "g++ -std=c++11 <name>.cpp -o <name>";
+		LANG_CPP.runCommand[OSType.ANY.ordinal()] = "<path><name>";
 		LANG_CPP.isCompilable = true;
 		LANG_CPP.isRunnable = true;
 		LANG_CPP.quickCode = "#include <iostream>\n\nusing namespace std;\n\nint main(){\n	cout << \"Hello World\" << endl;\n	return 0;\n}";
@@ -82,8 +83,8 @@ public class LanguageFactory {
 		LANG_CS = new Language();
 		LANG_CS.name = "C#";
 		LANG_CS.extension = ".cs";
-		LANG_CS.compileCommand = "C:/Windows/Microsoft.NET/Framework/v4.0.30319/csc.exe /out:<name>.exe <name>.cs";
-		LANG_CS.runCommand = "<path><name>.exe";
+		LANG_CS.compileCommand[OSType.ANY.ordinal()] = "csc.exe /out:<name>.exe <name>.cs";
+		LANG_CS.runCommand[OSType.ANY.ordinal()] = "<path><name>.exe";
 		LANG_CS.isCompilable = true;
 		LANG_CS.isRunnable = true;
 		LANG_CS.quickCode = "public class CLASS_NAME{\n\tpublic static void Main(){\n\t\tSystem.Console.WriteLine(\"Hello World!\");\n\t}\n}";
@@ -96,8 +97,8 @@ public class LanguageFactory {
 		LANG_H = new Language();
 		LANG_H.name = "Header";
 		LANG_H.extension = ".h";
-		LANG_H.compileCommand = "g++ -std=c++11 <name>.cpp -o <name>";
-		LANG_H.runCommand = "<path><name>";
+		LANG_H.compileCommand[OSType.ANY.ordinal()] = "g++ -std=c++11 <name>.cpp -o <name>";
+		LANG_H.runCommand[OSType.ANY.ordinal()] = "<path><name>";
 		LANG_H.isCompilable = true;
 		LANG_H.isRunnable = true;
 		LANG_H.quickCode = "#include <iostream>\n\nusing namespace std;\n\nint main(){\n	cout << \"Hello World\" << endl;\n	return 0;\n}";
@@ -110,8 +111,8 @@ public class LanguageFactory {
 		LANG_JAVA = new Language();
 		LANG_JAVA.name = "Java";
 		LANG_JAVA.extension = ".java";
-		LANG_JAVA.compileCommand = "javac <name>.java";
-		LANG_JAVA.runCommand = "java <name>";
+		LANG_JAVA.compileCommand[OSType.ANY.ordinal()] = "javac <name>.java";
+		LANG_JAVA.runCommand[OSType.ANY.ordinal()] = "java <name>";
 		LANG_JAVA.isCompilable = true;
 		LANG_JAVA.isRunnable = true;
 		LANG_JAVA.quickCode ="public class CLASS_NAME {\n\tpublic static void main(String[] args){ \n\t\tSystem.out.println(\"Hello World!\");\n\t}\n}";
@@ -122,15 +123,18 @@ public class LanguageFactory {
 		LANG_JAVA.setNameSuggester(new NameSuggeseter() {	
 			@Override
 			public String generateFileName(String text) {
-				int iClass = text.indexOf(" class ");
-				String tempS = text.substring(iClass + 7);
-				int iSpace = tempS.indexOf(" ");
-				int iNLine = tempS.indexOf("\n");
-				int iBlup = tempS.indexOf("{");
-				int iEnd = Math.min(iSpace, iBlup);
-				iEnd = Math.min(iEnd, iNLine);
-
-				return text.substring(iClass + 7, iClass + 7 + iEnd) + ".java";
+				try{
+					int iClass = text.indexOf(" class ");
+					String tempS = text.substring(iClass + 7);
+					int iSpace = tempS.indexOf(" ");
+					int iNLine = tempS.indexOf("\n");
+					int iBlup = tempS.indexOf("{");
+					int iEnd = Math.min(iSpace, iBlup);
+					iEnd = Math.min(iEnd, iNLine);
+					return text.substring(iClass + 7, iClass + 7 + iEnd) + ".java";
+				}catch(Exception e){
+					return LANG_JAVA.extension;
+				}
 			}
 		});
 		languages.add(LANG_JAVA);
@@ -139,7 +143,7 @@ public class LanguageFactory {
 		LANG_PYTHON = new Language();
 		LANG_PYTHON.name = "Python";
 		LANG_PYTHON.extension = ".py";
-		LANG_PYTHON.runCommand = "python -u <name>.py";
+		LANG_PYTHON.runCommand[0] = "python -u <name>.py";
 		LANG_PYTHON.isCompilable = false;
 		LANG_PYTHON.isRunnable = true;
 		LANG_PYTHON.quickCode ="print \"Hello world\"";
@@ -154,7 +158,7 @@ public class LanguageFactory {
 		LANG_JAVASCRIPT.extension = ".js";
 		LANG_JAVASCRIPT.isCompilable = false;
 		LANG_JAVASCRIPT.isRunnable = true;
-		LANG_JAVASCRIPT.runCommand = "node <name>.js";
+		LANG_JAVASCRIPT.runCommand[OSType.ANY.ordinal()] = "node <name>.js";
 		LANG_JAVASCRIPT.quickCode ="console.log(\"Hello world\");";
 		LANG_JAVASCRIPT.extensionFilter = new ExtensionFilter("JavaScript (*.js)", "*" + LANG_JAVASCRIPT.extension);
 		LANG_JAVASCRIPT.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
@@ -167,9 +171,10 @@ public class LanguageFactory {
 		LANG_TYPESCRIPT.extension = ".ts";
 		LANG_TYPESCRIPT.isCompilable = true;
 		LANG_TYPESCRIPT.isRunnable = true;
-		LANG_TYPESCRIPT.compileCommand = "tsc.cmd greet.ts <name>.ts";
-		LANG_TYPESCRIPT.runCommand = "node <name>.js";
-		LANG_TYPESCRIPT.quickCode ="class Greeter {\n\tconstructor(public greeting: string) { }\n\tgreet() {\n\t\treturn \"<h1>\" + this.greeting + \"</h1>\";\n\t}\n};\n\nvar greeter = new Greeter(\"Hello World!\");\nvar str = greeter.greet();";
+		LANG_TYPESCRIPT.compileCommand[OSType.WIN.ordinal()] = "tsc.cmd <name>.ts";
+		LANG_TYPESCRIPT.compileCommand[OSType.ANY.ordinal()] = "tsc <name>.ts";
+		LANG_TYPESCRIPT.runCommand[OSType.ANY.ordinal()] = "node <name>.js";
+		LANG_TYPESCRIPT.quickCode ="class CLASS_NAME {\n\tconstructor() {\n\t\tconsole.log(\"Hello World!\");\n\t}\n};\n\nnew CLASS_NAME();";
 		LANG_TYPESCRIPT.extensionFilter = new ExtensionFilter("TypeScript (*.ts)", "*" + LANG_TYPESCRIPT.extension);
 		LANG_TYPESCRIPT.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_TYPESCRIPT;
 		LANG_TYPESCRIPT.defaultSugetedName = "MyTypeScriptCode" + LANG_TYPESCRIPT.extension;

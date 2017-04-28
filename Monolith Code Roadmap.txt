@@ -1,0 +1,43 @@
+﻿---------------------
+MONOLITH CODE ROADMAP
+---------------------
+
+﻿New Features:
+- Tabs
+- Color picker for inline color code
+- Lightweight scrollbar with opacity and transition
+- License MIT
+- Plugin support
+- Console parameter set functions
+- Html based console display
+- Tool chain integration for git
+- Webseite
+- Native launcher
+- File Tree view
+- Minimap
+- Multiline select
+
+Improvements:
+- Special Symbols(Math, Info..)
+- Ensure that new window is inside screen
+- Make console wrap
+- FilePlus for all file related fixes
+- Search scroll to find rect
+- jdk, g++, etc... detection
+- Upgrade to searchPlus
+- Load language as plugins
+- Better java class name detection
+- Better Math with algebra
+- New Line viewport not aligned with border.
+- Allow for native terminal to execute build and run
+- API/Code cleanup
+- Documentation
+- Pack icon atlas
+
+Bugs
+- Console not scrolling 100% down
+- FileChooser returns file without extension
+- Symbols not opening after closing
+
+Done:
++ Custom build/run commands

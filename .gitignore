@@ -51,6 +51,7 @@ local.properties
 
 # Monolith Code files
 config.ini
+custom_commands.xml
 .classpath
 .project
 autosave/

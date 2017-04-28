@@ -1,5 +1,5 @@
 /**
-F *  Monolith Code
+ *  Monolith Code
  *  by Haeri Studios
  *  (c) 2015
  */
@@ -97,11 +97,13 @@ import Code.Components.LolCrypt;
 import Code.Components.Table;
 import Code.Components.Swing.StatusBar;
 import Code.Console.Console;
+import Code.Dialog.CustomBuildRunDialog;
 import Code.Dialog.RMBMenu;
 import Code.Dialog.SearchDialog;
 import Code.Dialog.SettingsDialog;
 import Code.Dialog.SymbolDialog;
 import Code.JavaFX.SynchronousJFXFileChooser;
+import Code.Languages.CustomCommandSerializer;
 import Code.Languages.Language;
 import Code.Languages.LanguageFactory;
 import Code.Updater.Updater;
@@ -130,7 +132,7 @@ public class MonolithFrame extends JFramePlus {
 						mUndo, mRedo, mCut, mCopy, mPaste, 
 						mSymbol,
 						mSettings, mFind, mCode, mMath, mBin, mBinInv, mTable,
-						mBuild, mRun, mBuildRun, mBuildRunNew, 
+						mBuild, mRun, mBuildRun, mBuildRunNew, mBuildConf,
 						mUpdate, mHelp,
 						mToInt, mCrypt, mDeCrypt;
 	private JRadioButtonMenuItem[] languageButtons;
@@ -140,27 +142,23 @@ public class MonolithFrame extends JFramePlus {
 	private JViewport jvp;
 
 	// Misc Components
+	public Settings settings;
+
 	private MonolithFrame parent;
 	private BuildConsole buildConsole;
 	private Document document;
-	public Settings settings;
 	private BackgroundSave backgroundSave;
 	
 	// Primitives
+	public String fullName = "";
+	public String path = "/";
+	public boolean buildNew;
+
+	private Language language;
 	private int chars = 0;
 	private int dividerLocation = 0;
 	private double ans = 0;
-
-	private String os = "";
-	public String fullName = "";
-	public String path = "/";
-	private Language language;
-
-	private boolean hasDir, hasChange, isReading, ignoreNameDiscrepency;
-
-	public boolean buildNew;
-
-	private boolean isPin;
+	private boolean hasDir, hasChange, isReading, ignoreNameDiscrepency, isPin;
 	private static boolean isFirst = true;
 
 	// Defaults
@@ -169,9 +167,10 @@ public class MonolithFrame extends JFramePlus {
 	private static final String DIR_THEMES = GlobalVariables.RESOURCE_PATH + "/themes/";
 
 	// Icons
+	public static ImageIcon iUndo, iRedo, iCut, iCopy, iPaste, iFind, iCog, iRun, iMath, iStop, iBuild, iBuildRun, iBuildConfig;
+
 	private static final ImageIcon icon = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon.png"));
 	private static ImageIcon iSave, iSaveas, iCode, iBinary, iPinUp, iPinDown, iOpen, iNew, iNewFork, iExit, iTable, iEarth, gifLoading, iUpdate, iInfo, iBuildRunNew;
-	public static ImageIcon iUndo, iRedo, iCut, iCopy, iPaste, iFind, iCog, iRun, iMath, iStop, iBuild, iBuildRun, iBuildConfig;
 
 	
 	public MonolithFrame(String titel, int wWidth, int wHeight) {
@@ -198,7 +197,20 @@ public class MonolithFrame extends JFramePlus {
 		// ---------- INITIALIZSATION ---------- //
 				
 		// Operating System
-		os = System.getProperty("os.name");
+		GlobalVariables.osName = System.getProperty("os.name");		
+		
+		String osLow = GlobalVariables.osName.toLowerCase();
+		if(osLow.indexOf("win") >= 0){
+			GlobalVariables.osType = OSType.WIN;
+		}else if(osLow.indexOf("mac") >= 0){
+			GlobalVariables.osType = OSType.MAC;
+		}else if(osLow.indexOf("nix") >= 0 || osLow.indexOf("nux") >= 0 || osLow.indexOf("aix") > 0 ){
+			GlobalVariables.osType = OSType.NIX;
+		}else{
+			GlobalVariables.osType = OSType.ANY;
+		}
+
+
 
 		// Changes to System Look and Feel
 		try {
@@ -218,7 +230,7 @@ public class MonolithFrame extends JFramePlus {
 		
 		
 		// Console
-		console = new Console(GlobalVariables.MONOLITH_NAME + " v" + GlobalVariables.VERSION + ":" +GlobalVariables.BUILD + " on " + os, this);
+		console = new Console(GlobalVariables.MONOLITH_NAME + " v" + GlobalVariables.VERSION + ":" +GlobalVariables.BUILD + " on " + GlobalVariables.osName, this);
 		
 		// Languages
 		LanguageFactory.generateLanguages();
@@ -247,6 +259,14 @@ public class MonolithFrame extends JFramePlus {
 			if(GlobalVariables.debug) e.printStackTrace();
 		}
 
+ 		// Load custom Commands
+ 		try {
+ 			CustomCommandSerializer.init();
+ 		} catch (Exception e) {
+ 			console.println("Faild to load load custom commands\n"+ e.getMessage(), Console.err);
+ 			if(GlobalVariables.debug) e.printStackTrace();
+ 		}
+		
 		// Load Settings
 		settings = new Settings(console);
 		
@@ -395,10 +415,14 @@ public class MonolithFrame extends JFramePlus {
 		mBuildRun.setIcon(iBuildRun);
 		mBuildRunNew = new JMenuItem("Build & Run as New");
 		mBuildRunNew.setIcon(iBuildRunNew);
+		mBuildConf = new JMenuItem("Custom Build/Run");
+		mBuildConf.setIcon(iBuildConfig);
 		mbBuild.add(mBuild);
 		mbBuild.add(mRun);
 		mbBuild.add(mBuildRun);
 		mbBuild.add(mBuildRunNew);
+		mbBuild.addSeparator();
+		mbBuild.add(mBuildConf);
 		
 		// HELP
 		mUpdate = new JMenuItem("Check for Updates");
@@ -454,13 +478,14 @@ public class MonolithFrame extends JFramePlus {
 		tField.setText("");
 		tField.setFont(settings.getFont());
 		tField.setTabSize(settings.getTabSize());
+		//TODO: To be removed
 		tField.setBorder(new EmptyBorder(2, 12, 6, 12));
 		tField.setDragEnabled(true);
-		
 		tField.setPopupMenu(new RMBMenu(this));
 		document = tField.getDocument();
 		
-		// autocomplete features
+		
+		// Autocomplete features
 		LanguageSupportFactory.get().register(tField);
 		
 		
@@ -469,12 +494,10 @@ public class MonolithFrame extends JFramePlus {
 		tScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		tScrollPane.getVerticalScrollBar().setUnitIncrement(6);
 
-
 		// Gutter
 		jvp = tScrollPane.getRowHeader();
 		gutter = tScrollPane.getGutter();
 		gutter.setBorder(new Gutter.GutterBorder(0, 6, 0, 6));
-		gutter.setBackground(Color.black);
 		
 		// Splitter
 		splitter = new JSplitPaneWithZeroSizeDivider(JSplitPane.VERTICAL_SPLIT);
@@ -518,8 +541,8 @@ public class MonolithFrame extends JFramePlus {
 		}
 
 		// After Pack
-		updateMargin();
 		tField.requestFocus();		
+		updateMargin();
 		setVisible(true);
 		
 		// Start BackupTimer
@@ -875,6 +898,15 @@ public class MonolithFrame extends JFramePlus {
 			}
 		});
 
+		// Build Config
+		mBuildConf.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				new CustomBuildRunDialog(MonolithFrame.this, language, fullName, path);
+			}
+		});
+		 
+		
 		// HELP
 		
 		// Check for updates
@@ -1691,6 +1723,7 @@ public class MonolithFrame extends JFramePlus {
 			try {
 				Rectangle end = tField.modelToView(len);
 				if (end != null) {
+					//TODO: Increase top margin to 8 when issue #236 is resolved
 					tField.setBorder(new EmptyBorder(2, 6, viewport.getHeight() - (end.height + 2), 6));
 				}
 			} catch (BadLocationException e) {
