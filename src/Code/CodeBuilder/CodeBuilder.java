@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import Code.Components.InputStreamLineBuffer;
 import Code.Console.Console;
 import Code.Core.GlobalVariables;
-import Code.Core.OSType;
+import Code.Core.Settings;
 import Code.Languages.CustomCommandEntry;
 import Code.Languages.CustomCommandSerializer;
 import Code.Languages.Language;
@@ -24,6 +24,7 @@ public class CodeBuilder extends Thread {
 	private InputStream inStream, inErrStream;
 	private OutputStream outStream;
 	private InputStreamLineBuffer outBuff, errBuff;
+	private Settings settings;
 
 	private CustomCommandEntry cce;
 	private int mode = -1;
@@ -34,11 +35,12 @@ public class CodeBuilder extends Thread {
 	public static final int FREE_RUN = 3;
 	
 	
-	public CodeBuilder(String path, String fullname, Language language, BuildConsole con) {
+	public CodeBuilder(String path, String fullname, Language language, BuildConsole con, Settings settings) {
 		this.path = path.replaceAll("\\\\", "/");
 		this.fullname = fullname;
 		this.language = language;
 		this.con = con;
+		this.settings = settings;
 		
 		try{
  			cce = CustomCommandSerializer.getCCE(language.name);
@@ -57,44 +59,26 @@ public class CodeBuilder extends Thread {
 		name = LanguageFactory.getName(fullname);
 		
 		if(language.isCompilable && language.isRunnable){
-			if (language.compileCommand[GlobalVariables.osType.ordinal()] != null)
-				buildCommand = parseCommand(language.compileCommand[GlobalVariables.osType.ordinal()]);
-			else
-				buildCommand = parseCommand(language.compileCommand[OSType.ANY.ordinal()]);
-			if (language.runCommand[GlobalVariables.osType.ordinal()] != null)
-				runCommand = parseCommand(language.runCommand[GlobalVariables.osType.ordinal()]);
-			else
-				runCommand = parseCommand(language.runCommand[OSType.ANY.ordinal()]);
+			buildCommand = parseCommand(settings.<String>getSetting(LanguageFactory.getCompileName(language)));
+			runCommand = parseCommand(settings.<String>getSetting(LanguageFactory.getRunName(language)));
 		}else if(language.isCompilable){
-			if (language.compileCommand[GlobalVariables.osType.ordinal()] != null)
-				buildCommand = parseCommand(language.compileCommand[GlobalVariables.osType.ordinal()]);
-			else
-				buildCommand = parseCommand(language.compileCommand[OSType.ANY.ordinal()]);
+			buildCommand = parseCommand(settings.<String>getSetting(LanguageFactory.getCompileName(language)));
 		}else if(language.isRunnable){
-			if (language.runCommand[GlobalVariables.osType.ordinal()] != null)
-				runCommand = parseCommand(language.runCommand[GlobalVariables.osType.ordinal()]);
-			else
-				runCommand = parseCommand(language.runCommand[OSType.ANY.ordinal()]);
+			runCommand = parseCommand(settings.<String>getSetting(LanguageFactory.getRunName(language)));
 		}
 		
 		// Override if custom build is enabled
  		if(cce.isCustomBuildCommand && cce.isCustomRunCommand){
  			buildCommand = parseCommand(cce.customBuildCommand);
  			runCommand = parseCommand(cce.customRunCommand);
- 			//con.println("Compiling with custom command*");
- 			//con.println("Running with custom command*");
  		}else if (cce.isCustomBuildCommand && language.isRunnable){
  			buildCommand = parseCommand(cce.customBuildCommand);
- 			//con.println("Compiling with custom command*");
  		}else if (cce.isCustomRunCommand && language.isCompilable){
  			runCommand = parseCommand(cce.customRunCommand);
- 			//con.println("Running with custom command*");
  		}else if (cce.isCustomBuildCommand && !language.isRunnable){
  			buildCommand = parseCommand(cce.customBuildCommand);
- 			//con.println("Compiling with custom command*");
  		}else if (cce.isCustomRunCommand && !language.isCompilable){
  			runCommand = parseCommand(cce.customRunCommand);
- 			//con.println("Running with custom command*");
  		}
 		
 		// Print if mode mismatch

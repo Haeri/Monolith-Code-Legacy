@@ -17,6 +17,7 @@ import javax.swing.text.Document;
 import Code.Console.Console;
 import Code.Core.GlobalVariables;
 import Code.Core.MonolithFrame;
+import Code.Core.Settings;
 
 
 public class Table extends JDialog{
@@ -31,7 +32,7 @@ public class Table extends JDialog{
 	public Table(MonolithFrame motherFrame) {
 		super(motherFrame);
 		this.motherFrame = motherFrame;
-		this.tabSize = motherFrame.settings.getTabSize();
+		this.tabSize = motherFrame.settings.getSetting(Settings.TAB_SIZE);
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();

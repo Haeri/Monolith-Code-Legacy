@@ -35,6 +35,7 @@ import Code.Components.Swing.ScrollBarPlus;
 import Code.Core.AppTheme;
 import Code.Core.GlobalVariables;
 import Code.Core.MonolithFrame;
+import Code.Core.Settings;
 import Code.Core.Util;
 
 
@@ -259,7 +260,7 @@ public class Console extends JPanel{
 			
 			//Check if value legal
 			if(value >= 0 && value <= 128){
-				parent.settings.setBackupMaxSaveDays(value);				
+				parent.settings.setSetting(Settings.BACKUP_MAX_SAVE_DAYS, value);				
 				println("Maximum backup days set to " + src);
 			}else{
 				println("Invalid value!", Console.err);

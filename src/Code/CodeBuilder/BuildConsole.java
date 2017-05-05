@@ -48,7 +48,7 @@ public class BuildConsole extends Console{
 		this.fullname = fullname;
 		this.language = language;
 		
-		builder = new CodeBuilder(path, fullname, language, this);
+		builder = new CodeBuilder(path, fullname, language, this, parent.settings);
 		createWindow();
 	}
 	
@@ -223,7 +223,7 @@ public class BuildConsole extends Console{
 	
 	private void renewBuilder(){
 		stop();
-		CodeBuilder newbuilder = new CodeBuilder(path, fullname, language, this);
+		CodeBuilder newbuilder = new CodeBuilder(path, fullname, language, this, parent.settings);
 		builder = newbuilder;
 		btStop.setEnabled(true);
 	}

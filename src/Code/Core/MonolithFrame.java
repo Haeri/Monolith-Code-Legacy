@@ -33,6 +33,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,8 +41,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -168,24 +171,22 @@ public class MonolithFrame extends JFramePlus {
 
 	// Icons
 	public static ImageIcon iUndo, iRedo, iCut, iCopy, iPaste, iFind, iCog, iRun, iMath, iStop, iBuild, iBuildRun, iBuildConfig;
-
-	private static final ImageIcon icon = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon.png"));
 	private static ImageIcon iSave, iSaveas, iCode, iBinary, iPinUp, iPinDown, iOpen, iNew, iNewFork, iExit, iTable, iEarth, gifLoading, iUpdate, iInfo, iBuildRunNew;
 
 	
-	public MonolithFrame(String titel, int wWidth, int wHeight) {
-		this(null, titel, wWidth, wHeight, null);
+	public MonolithFrame(String titel) {
+		this(null, titel, null);
 	}
 
-	public MonolithFrame(String titel, int wWidth, int wHeight, MonolithFrame spawner) {
-		this(null, titel, wWidth, wHeight, spawner);
+	public MonolithFrame(String titel, MonolithFrame spawner) {
+		this(null, titel, spawner);
 	}
 
-	public MonolithFrame(String path, String titel, int wWidth, int wHeight) {
-		this(path, titel, wWidth, wHeight, null);
+	public MonolithFrame(String path, String titel) {
+		this(path, titel, null);
 	}
 
-	public MonolithFrame(String path, String titel, int wWidth, int wHeight, MonolithFrame spawner) {
+	public MonolithFrame(String path, String titel, MonolithFrame spawner) {
 
 		super(GlobalVariables.MONOLITH_NAME + " - " + titel);
 		parent = spawner;
@@ -252,7 +253,7 @@ public class MonolithFrame extends JFramePlus {
 		// Load Font
 		try {
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			InputStream is = getClass().getResourceAsStream(GlobalVariables.RESOURCE_PATH + "/SourceCodePro.otf");
+			InputStream is = getClass().getResourceAsStream(GlobalVariables.RESOURCE_PATH + "/Consolas.ttf");
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, is));
 		} catch (IOException | FontFormatException e) {
 			console.println("Faild to load load default font\n" + e.getMessage(), Console.err);
@@ -284,7 +285,7 @@ public class MonolithFrame extends JFramePlus {
 		
 		// Window Buildup
 		this.setMinimumSize(new Dimension(300, 100));
-		this.setIconImage(icon.getImage());
+		//this.setIconImage(icon.getImage());
 		getContentPane().setLayout(new BorderLayout());
 
 		// Pin Button
@@ -378,8 +379,8 @@ public class MonolithFrame extends JFramePlus {
 		}
 
 		// VIEW
-		mCon = new JCheckBoxMenuItem("Console     ", settings.isConsole());
-		mLineB = new JCheckBoxMenuItem("Line Numbers", settings.isLineNumbers());
+		mCon = new JCheckBoxMenuItem("Console     ", settings.<Boolean>getSetting(Settings.IS_CONSOLE));
+		mLineB = new JCheckBoxMenuItem("Line Numbers", settings.<Boolean>getSetting(Settings.IS_LINE_NUMBERS));
 		mSymbol = new JMenuItem("Symbols");
 		mbView.add(mCon);
 		mbView.add(mLineB);
@@ -450,7 +451,7 @@ public class MonolithFrame extends JFramePlus {
 
 		// Label
 		leftLabel = new JLabel();
-		rightLabel = new JLabel("Width: " + settings.getWidth() + " Height: " + settings.getHeight());
+		rightLabel = new JLabel("Width: " + settings.getSetting(Settings.WIDTH) + " Height: " + settings.getSetting(Settings.HEIGHT));
 		leftLabel.setForeground(AppTheme.UI_LABEL_FG);
 		rightLabel.setForeground(AppTheme.UI_LABEL_FG);
 
@@ -476,8 +477,7 @@ public class MonolithFrame extends JFramePlus {
 		// TextArea
 		tField = new RSyntaxTextArea();
 		tField.setText("");
-		tField.setFont(settings.getFont());
-		tField.setTabSize(settings.getTabSize());
+		tField.setTabSize(settings.getSetting(Settings.TAB_SIZE));
 		//TODO: To be removed
 		tField.setBorder(new EmptyBorder(2, 12, 6, 12));
 		tField.setDragEnabled(true);
@@ -510,13 +510,14 @@ public class MonolithFrame extends JFramePlus {
 		getContentPane().add(splitter, BorderLayout.CENTER);
 
 		// Set initial Values
-		setTheme(settings.getTheme());
+		setTheme(settings.getSetting(Settings.THEME));
+		setFont(settings.<String>getSetting(Settings.FONT_NAME));
 		setText("", LanguageFactory.LANG_TEXT);
 		carretUpdate();
 		initConsole();
-		toggleLineNumbers(settings.isLineNumbers());
-		setLineWrap(settings.isLineWrap());
-		setCodeFolding(settings.isCodeFolding());
+		toggleLineNumbers(settings.getSetting(Settings.IS_LINE_NUMBERS));
+		setLineWrap(settings.getSetting(Settings.IS_LINE_NUMBERS));
+		setCodeFolding(settings.getSetting(Settings.IS_CODE_FOLDING));
 		
 		// TODO Do this
 //      setDefaultLookAndFeelDecorated(true);
@@ -530,14 +531,11 @@ public class MonolithFrame extends JFramePlus {
 
 		// Parent Information
 		if (parent != null) {
-			setSize(new Dimension(wWidth, wHeight));
+			setSize(new Dimension(parent.getWidth(), parent.getHeight()));
 			setLocation(parent.getLocation().x + 30, parent.getLocation().y + 30);
-		} else if (settings.getLastX() == -1 && settings.getLastY() == -1) {
-			setSize(new Dimension(wWidth, wHeight));
-			setLocationRelativeTo(null);
 		} else {
-			setSize(new Dimension(settings.getWidth(), settings.getHeight()));
-			setLocation(settings.getLastX(), settings.getLastY());
+			setSize(new Dimension(settings.getSetting(Settings.WIDTH), settings.getSetting(Settings.HEIGHT)));
+			setLocation(settings.getSetting(Settings.LAST_X), settings.getSetting(Settings.LAST_Y));
 		}
 
 		// After Pack
@@ -632,7 +630,7 @@ public class MonolithFrame extends JFramePlus {
 		mNew.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				new MonolithFrame(titel, settings.getWidth(), settings.getHeight(), MonolithFrame.this);
+				new MonolithFrame(titel, MonolithFrame.this);
 			}
 		});
 
@@ -820,7 +818,7 @@ public class MonolithFrame extends JFramePlus {
 				if (getDocText().isEmpty()) {
 					setText(language.quickCode, language);
 				} else {
-					MonolithFrame newCode = new MonolithFrame(titel, settings.getWidth(), settings.getHeight(), MonolithFrame.this);
+					MonolithFrame newCode = new MonolithFrame(titel, MonolithFrame.this);
 					newCode.setText(language.quickCode, language);
 				}
 			}
@@ -951,7 +949,7 @@ public class MonolithFrame extends JFramePlus {
 						build += temp2 + "\t";
 					}
 				}
-				new MonolithFrame(titel, settings.getWidth(), settings.getHeight(), MonolithFrame.this).setText(build);
+				new MonolithFrame(titel, MonolithFrame.this).setText(build);
 			}
 		});
 
@@ -1047,8 +1045,7 @@ public class MonolithFrame extends JFramePlus {
 							if (tField.getText().equals("")) {
 								readFromFile(file.getAbsolutePath());
 							} else {
-								new MonolithFrame(file.getAbsolutePath(), "Filename", settings.getWidth(), settings.getHeight(),
-										MonolithFrame.this);
+								new MonolithFrame(file.getAbsolutePath(), "Filename", MonolithFrame.this);
 							}
 						}
 						evt.dropComplete(true);
@@ -1139,8 +1136,8 @@ public class MonolithFrame extends JFramePlus {
 		this.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent event) {
-				settings.setWidth(MonolithFrame.this.getWidth());
-				settings.setHeight(MonolithFrame.this.getHeight());
+				settings.setSetting(Settings.WIDTH, MonolithFrame.this.getWidth());
+				settings.setSetting(Settings.HEIGHT, MonolithFrame.this.getHeight());
 			}
 		});
 
@@ -1217,28 +1214,28 @@ public class MonolithFrame extends JFramePlus {
 
 	// Show/Hide Console
 	public void toggleConsole(boolean open) {
-		if(settings.isConsole() != open)
+		if(!settings.getSetting(Settings.IS_CONSOLE).equals(open))
 			toggleConsole();
 	}
 
 	public void toggleConsole() {
-		settings.setConsole(!settings.isConsole());
+		settings.setSetting(Settings.IS_CONSOLE, !settings.<Boolean>getSetting(Settings.IS_CONSOLE));
 		initConsole();
 	}
 
 	public void toggleLineNumbers(boolean state) {
-		settings.setLineNumbers(state);
-		if (settings.isLineNumbers()) {
+		settings.setSetting(Settings.IS_LINE_NUMBERS, state);
+		if (settings.<Boolean>getSetting(Settings.IS_LINE_NUMBERS)) {
 			tScrollPane.setRowHeader(jvp);
 		} else {
 			tScrollPane.setRowHeader(null);
 		}
-		mLineB.setSelected(settings.isLineNumbers());
+		mLineB.setSelected(settings.getSetting(Settings.IS_LINE_NUMBERS));
 	}
 	
 	// Show/Hide Line Numbers
 	public void toggleLineNumbers() {
-		toggleLineNumbers(!settings.isLineNumbers());
+		toggleLineNumbers(!settings.<Boolean>getSetting(Settings.IS_LINE_NUMBERS));
 	}
 
 	/**
@@ -1471,7 +1468,7 @@ public class MonolithFrame extends JFramePlus {
 	public void resetSettings(){
 		setFontSize(Settings.DEF_FONT_SIZE);
 		setTabSize(Settings.DEF_TAB_SIZE);
-		setFont(Settings.DEF_FONT.getName());
+		setFont(Settings.DEF_FONT_NAME);
 		setTheme(Settings.DEF_THEME);
 		setCodeFolding(Settings.DEF_IS_CODE_FOLDING);
 		setLineWrap(Settings.DEF_IS_LINE_WRAP);
@@ -1493,11 +1490,11 @@ public class MonolithFrame extends JFramePlus {
 	}
 
 	public int getTabSize() {
-		return settings.getTabSize();
+		return settings.getSetting(Settings.TAB_SIZE);
 	}
 
 	public int getFontSize() {
-		return settings.getFontSize();
+		return settings.getSetting(Settings.FONT_SIZE);
 	}
 
 	public String getText() {
@@ -1557,7 +1554,7 @@ public class MonolithFrame extends JFramePlus {
 	 * @param size - int tab size to be set
 	 */
 	public void setTabSize(int size) {
-		settings.setTabSize(size);
+		settings.setSetting(Settings.TAB_SIZE, size);
 		tField.setTabSize(size);
 	}
 
@@ -1566,7 +1563,7 @@ public class MonolithFrame extends JFramePlus {
 	 * @param size - int size to be set
 	 */
 	public void setFontSize(int size) {
-		settings.setFontSize(size);
+		settings.setSetting(Settings.FONT_SIZE, size);
 		String tempFont = tField.getFont().getFontName();
 		int tempStyle = tField.getFont().getStyle();
 		tField.setFont(new Font(tempFont, tempStyle, size));
@@ -1584,9 +1581,11 @@ public class MonolithFrame extends JFramePlus {
 	public void setFont(String fontName) {
 		int tempSize = tField.getFont().getSize();
 		int tempStyle = tField.getFont().getStyle();
-		settings.setFont(new Font(fontName, tempStyle, tempSize));
-		tField.setFont(settings.getFont());
-		gutter.setLineNumberFont(settings.getFont());
+		Font tempFont = new Font(fontName, tempStyle, tempSize);
+		
+		settings.setSetting(Settings.FONT_NAME, fontName);
+		tField.setFont(tempFont);
+		gutter.setLineNumberFont(tempFont);
 		
 		//updateMargin();
 		//repaint();
@@ -1597,7 +1596,7 @@ public class MonolithFrame extends JFramePlus {
 	 * @param isLineWrap - Boolean should Lines wrap or not
 	 */
 	public void setLineWrap(boolean isLineWrap) {
-		settings.setLineWrap(isLineWrap);
+		settings.setSetting(Settings.IS_LINE_WRAP, isLineWrap);
 		tField.setLineWrap(isLineWrap);
 	}
 	
@@ -1606,7 +1605,7 @@ public class MonolithFrame extends JFramePlus {
 	 * @param isCodeFolding - Boolean should code folding be activated
 	 */
 	public void setCodeFolding(boolean isCodeFolding) {
-		settings.setCodeFolding(isCodeFolding);
+		settings.setSetting(Settings.IS_CODE_FOLDING, isCodeFolding);
 		tField.setCodeFoldingEnabled(isCodeFolding);
 	}
 
@@ -1638,7 +1637,7 @@ public class MonolithFrame extends JFramePlus {
 		}
 		if (succes){
 			theme.apply(tField);
-			settings.setTheme(themeName);
+			settings.setSetting(Settings.THEME, themeName);
 			
 			ScrollBarPlus hBar = new ScrollBarPlus(tField.getBackground());
 			ScrollBarPlus vBar = new ScrollBarPlus(tField.getBackground());
@@ -1698,7 +1697,7 @@ public class MonolithFrame extends JFramePlus {
 	}
 
 	private void initConsole(){
-		if (settings.isConsole()) {
+		if (settings.<Boolean>getSetting(Settings.IS_CONSOLE)) {
 			if (dividerLocation != 0)
 				splitter.setDividerLocation(dividerLocation);
 			splitter.setBottomComponent(console);
@@ -1711,7 +1710,7 @@ public class MonolithFrame extends JFramePlus {
 			splitter.setDividerSize(0);
 			updateMargin();
 		}
-		mCon.setSelected(settings.isConsole());
+		mCon.setSelected(settings.getSetting(Settings.IS_CONSOLE));
 	}
 
 	// Empty Space Update
@@ -1880,7 +1879,7 @@ public class MonolithFrame extends JFramePlus {
 			if (getDocText().isEmpty()) {
 				readFromFile(file.toString());
 			} else {
-				new MonolithFrame(file.toString(), "BLA", settings.getWidth(), settings.getHeight(), MonolithFrame.this);
+				new MonolithFrame(file.toString(), "BLA", MonolithFrame.this);
 			}
 		}
 
@@ -1968,8 +1967,8 @@ public class MonolithFrame extends JFramePlus {
 	}
 
 	private void overrideTheme(){
-		tField.setTabSize(settings.getTabSize());
-		setFontSize(settings.getFontSize());
+		tField.setTabSize(settings.getSetting(Settings.TAB_SIZE));
+		setFontSize(settings.getSetting(Settings.FONT_SIZE));
 		stat.setBackground(getTextBackground());
 	}
 
@@ -2014,6 +2013,32 @@ public class MonolithFrame extends JFramePlus {
 		iFind = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/find.png"));
 		iCog = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/cog.png"));
 		gifLoading = new ImageIcon(getClass().getResource(GlobalVariables.RESOURCE_PATH + "/loader.gif"));
+		
+		
+		// Set icon images
+		List<BufferedImage> mainIcons = new ArrayList<BufferedImage>();
+		try {
+			BufferedImage icon_20 = ImageIO.read(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon_20.png"));
+			BufferedImage icon_32 = ImageIO.read(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon_32.png"));
+			BufferedImage icon_40 = ImageIO.read(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon_40.png"));
+			BufferedImage icon_64 = ImageIO.read(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon_64.png"));
+			BufferedImage icon_128 = ImageIO.read(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon_128.png"));
+			BufferedImage icon_256 = ImageIO.read(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/icon_256.png"));
+			
+			mainIcons.add(icon_20);
+			mainIcons.add(icon_32);
+			mainIcons.add(icon_40);
+			mainIcons.add(icon_64);
+			mainIcons.add(icon_128);
+			mainIcons.add(icon_256);
+			
+			setIconImages(mainIcons);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 	} 
 
 }

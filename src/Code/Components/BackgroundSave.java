@@ -20,6 +20,7 @@ import javax.swing.Timer;
 import Code.Console.Console;
 import Code.Core.GlobalVariables;
 import Code.Core.MonolithFrame;
+import Code.Core.Settings;
 import Code.Core.Util;
 
 public class BackgroundSave extends Thread {
@@ -95,7 +96,7 @@ public class BackgroundSave extends Thread {
 
 		// delete
 		for (int i = 0; i < saveFiles.size() - MIN_KEEP_NUMBER; i++) {
-			if (saveFiles.get(i).pastDays > motherFrame.settings.getBackupMaxSaveDays()) {
+			if (saveFiles.get(i).pastDays > motherFrame.settings.<Integer>getSetting(Settings.BACKUP_MAX_SAVE_DAYS)) {
 				saveFiles.get(i).file.delete();
 				delCnt++;
 			}

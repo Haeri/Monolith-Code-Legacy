@@ -20,6 +20,7 @@ import javax.swing.event.ChangeListener;
 
 import Code.Core.GlobalVariables;
 import Code.Core.MonolithFrame;
+import Code.Core.Settings;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -86,7 +87,7 @@ public class SettingsDialog extends JDialog {
 				// Font Chooser
 				String fontS[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 				JComboBox<Object> fontComboBox = new JComboBox<Object>(fontS);
-				fontComboBox.setSelectedItem(motherFrame.settings.getFont().getName());
+				fontComboBox.setSelectedItem(motherFrame.settings.<String>getSetting(Settings.FONT_NAME));
 				GridBagConstraints gbc_fontComboBox = new GridBagConstraints();
 				gbc_fontComboBox.anchor = GridBagConstraints.WEST;
 				gbc_fontComboBox.fill = GridBagConstraints.VERTICAL;
@@ -107,7 +108,7 @@ public class SettingsDialog extends JDialog {
 				// Font Size
 				SpinnerModel fontSpinnerModel = new SpinnerNumberModel(motherFrame.tField.getFont().getSize(), 6, 60, 1);
 				JSpinner fontSizeSpinner = new JSpinner(fontSpinnerModel);
-				fontSizeSpinner.setValue(motherFrame.settings.getFontSize());
+				fontSizeSpinner.setValue(motherFrame.settings.getSetting(Settings.FONT_SIZE));
 				GridBagConstraints gbc_fontSizeSpinner = new GridBagConstraints();
 				gbc_fontSizeSpinner.insets = new Insets(0, 0, 5, 0);
 				gbc_fontSizeSpinner.fill = GridBagConstraints.BOTH;
@@ -125,9 +126,9 @@ public class SettingsDialog extends JDialog {
 				fontPanel.add(tabSizeLab, gbc_tabSizeLab);
 				
 				// Tab Size Controller
-				SpinnerModel tabSpinnerModel = new SpinnerNumberModel(motherFrame.settings.getTabSize(), 1, 10, 1);
+				SpinnerModel tabSpinnerModel = new SpinnerNumberModel((int)motherFrame.settings.getSetting(Settings.TAB_SIZE), 1, 10, 1);
 				JSpinner tabSizeSpinner = new JSpinner(tabSpinnerModel);
-				tabSizeSpinner.setValue(motherFrame.settings.getTabSize());
+				tabSizeSpinner.setValue(motherFrame.settings.getSetting(Settings.TAB_SIZE));
 				GridBagConstraints gbc_tabSizeSpinner = new GridBagConstraints();
 				gbc_tabSizeSpinner.insets = new Insets(0, 0, 5, 0);
 				gbc_tabSizeSpinner.fill = GridBagConstraints.BOTH;
@@ -146,7 +147,7 @@ public class SettingsDialog extends JDialog {
 				
 				// Line Wrap Chaeckbox
 				JCheckBox chckbxLineWrap = new JCheckBox("Wrap lines that are too long");
-				chckbxLineWrap.setSelected(motherFrame.settings.isLineWrap());
+				chckbxLineWrap.setSelected(motherFrame.settings.getSetting(Settings.IS_LINE_WRAP));
 				GridBagConstraints gbc_chckbxLineWrap = new GridBagConstraints();
 				gbc_chckbxLineWrap.insets = new Insets(0, 0, 5, 0);
 				gbc_chckbxLineWrap.fill = GridBagConstraints.BOTH;
@@ -163,7 +164,7 @@ public class SettingsDialog extends JDialog {
 				fontPanel.add(lblCodeFolding, gbc_lblCodeFolding);
 				
 				JCheckBox chckbxToggleCodeFolding = new JCheckBox("Toggle code folding");
-				chckbxToggleCodeFolding.setSelected(motherFrame.settings.isCodeFolding());
+				chckbxToggleCodeFolding.setSelected(motherFrame.settings.getSetting(Settings.IS_CODE_FOLDING));
 				GridBagConstraints gbc_chckbxToggleCodeFolding = new GridBagConstraints();
 				gbc_chckbxToggleCodeFolding.anchor = GridBagConstraints.WEST;
 				gbc_chckbxToggleCodeFolding.gridx = 1;
@@ -202,7 +203,7 @@ public class SettingsDialog extends JDialog {
 				// Theme Chooser
 				JComboBox<Object> ThemeBox = new JComboBox<Object>(GlobalVariables.loadedThemes);
 				GridBagConstraints gbc_ThemeBox = new GridBagConstraints();
-				ThemeBox.setSelectedItem(motherFrame.settings.getTheme());
+				ThemeBox.setSelectedItem(motherFrame.settings.getSetting(Settings.THEME));
 				gbc_ThemeBox.fill = GridBagConstraints.BOTH;
 				gbc_ThemeBox.gridx = 1;
 				gbc_ThemeBox.gridy = 0;
@@ -278,12 +279,12 @@ public class SettingsDialog extends JDialog {
 				
 				motherFrame.resetSettings();
 				
-				fontComboBox.setSelectedItem(motherFrame.settings.getFont().getName());
-				fontSizeSpinner.setValue(motherFrame.settings.getFontSize());
-				tabSizeSpinner.setValue(motherFrame.settings.getTabSize());
-				ThemeBox.setSelectedItem(motherFrame.settings.getTheme());
-				chckbxLineWrap.setSelected(motherFrame.settings.isLineWrap());
-				chckbxToggleCodeFolding.setSelected(motherFrame.settings.isCodeFolding());
+				fontComboBox.setSelectedItem(motherFrame.settings.<String>getSetting(Settings.FONT_NAME));
+				fontSizeSpinner.setValue(motherFrame.settings.getSetting(Settings.FONT_SIZE));
+				tabSizeSpinner.setValue(motherFrame.settings.getSetting(Settings.TAB_SIZE));
+				ThemeBox.setSelectedItem(motherFrame.settings.getSetting(Settings.THEME));
+				chckbxLineWrap.setSelected(motherFrame.settings.getSetting(Settings.IS_LINE_WRAP));
+				chckbxToggleCodeFolding.setSelected(motherFrame.settings.getSetting(Settings.IS_CODE_FOLDING));
 			}
 		});
 		

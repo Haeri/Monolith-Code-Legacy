@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
+import Code.Core.GlobalVariables;
 import Code.Core.OSType;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -17,7 +18,7 @@ public class LanguageFactory {
 	public static Language LANG_H;
 	public static Language LANG_JAVA;
 	public static Language LANG_PYTHON;
-	public static Language LANG_JAVASCRIPT;
+	//public static Language LANG_JAVASCRIPT;
 	public static Language LANG_TYPESCRIPT;
 	public static Language LANG_PHP;
 	public static Language LANG_HTML;
@@ -153,17 +154,17 @@ public class LanguageFactory {
 		languages.add(LANG_PYTHON);
 		
 		// javaScript
-		LANG_JAVASCRIPT = new Language();
-		LANG_JAVASCRIPT.name = "JavaScript";
-		LANG_JAVASCRIPT.extension = ".js";
-		LANG_JAVASCRIPT.isCompilable = false;
-		LANG_JAVASCRIPT.isRunnable = true;
-		LANG_JAVASCRIPT.runCommand[OSType.ANY.ordinal()] = "node <name>.js";
-		LANG_JAVASCRIPT.quickCode ="console.log(\"Hello world\");";
-		LANG_JAVASCRIPT.extensionFilter = new ExtensionFilter("JavaScript (*.js)", "*" + LANG_JAVASCRIPT.extension);
-		LANG_JAVASCRIPT.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
-		LANG_JAVASCRIPT.defaultSugetedName = "MyJavaScriptCode" + LANG_JAVASCRIPT.extension;
-		languages.add(LANG_JAVASCRIPT);
+//		LANG_JAVASCRIPT = new Language();
+//		LANG_JAVASCRIPT.name = "JavaScript";
+//		LANG_JAVASCRIPT.extension = ".js";
+//		LANG_JAVASCRIPT.isCompilable = false;
+//		LANG_JAVASCRIPT.isRunnable = true;
+//		LANG_JAVASCRIPT.runCommand[OSType.ANY.ordinal()] = "node <name>.js";
+//		LANG_JAVASCRIPT.quickCode ="console.log(\"Hello world\");";
+//		LANG_JAVASCRIPT.extensionFilter = new ExtensionFilter("JavaScript (*.js)", "*" + LANG_JAVASCRIPT.extension);
+//		LANG_JAVASCRIPT.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
+//		LANG_JAVASCRIPT.defaultSugetedName = "MyJavaScriptCode" + LANG_JAVASCRIPT.extension;
+//		languages.add(LANG_JAVASCRIPT);
 		
 		// typeScript
 		LANG_TYPESCRIPT = new Language();
@@ -262,6 +263,28 @@ public class LanguageFactory {
 		}
 		
 		return LANG_TEXT;
+	}
+	
+	public static String getCompileCommand(Language language){
+		if (language.compileCommand[GlobalVariables.osType.ordinal()] != null)
+			return language.compileCommand[GlobalVariables.osType.ordinal()];
+		else
+			return language.compileCommand[OSType.ANY.ordinal()];
+	}
+	
+	public static String getRunCommand(Language language){
+		if (language.runCommand[GlobalVariables.osType.ordinal()] != null)
+			return language.runCommand[GlobalVariables.osType.ordinal()];
+		else
+			return language.runCommand[OSType.ANY.ordinal()];
+	}
+	
+	public static String getCompileName(Language language){
+		return "LANG_" + language.name.toUpperCase() + "_COMPILE";
+	}
+	
+	public static String getRunName(Language language){
+		return "LANG_" + language.name.toUpperCase() + "_RUN";
 	}
 	
 	public static String getName(String name){
