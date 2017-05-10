@@ -86,6 +86,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 
+
 import Code.CodeBuilder.BuildConsole;
 import Code.CodeBuilder.CodeBuilder;
 import Code.Components.BackgroundSave;
@@ -170,29 +171,21 @@ public class MonolithFrame extends JFramePlus {
 	private static final String DIR_THEMES = GlobalVariables.RESOURCE_PATH + "/themes/";
 
 	// Icons
-	public static ImageIcon iUndo, iRedo, iCut, iCopy, iPaste, iFind, iCog, iRun, iMath, iStop, iBuild, iBuildRun, iBuildConfig;
+	public static ImageIcon iUndo, iRedo, iCut, iCopy, iPaste, iFind, iCog, iConsole, iRun, iMath, iStop, iBuild, iBuildRun, iBuildConfig;
 	private static ImageIcon iSave, iSaveas, iCode, iBinary, iPinUp, iPinDown, iOpen, iNew, iNewFork, iExit, iTable, iEarth, gifLoading, iUpdate, iInfo, iBuildRunNew;
 
 	
-	public MonolithFrame(String titel) {
-		this(null, titel, null);
+	public MonolithFrame(MonolithFrame spawner) {
+		this(null, spawner);
 	}
 
-	public MonolithFrame(String titel, MonolithFrame spawner) {
-		this(null, titel, spawner);
+	public MonolithFrame(String path) {
+		this(path, null);
 	}
 
-	public MonolithFrame(String path, String titel) {
-		this(path, titel, null);
-	}
-
-	public MonolithFrame(String path, String titel, MonolithFrame spawner) {
-
-		super(GlobalVariables.MONOLITH_NAME + " - " + titel);
+	public MonolithFrame(String path, MonolithFrame spawner) {
+		super("");
 		parent = spawner;
-
-		
-		
 		
 		
 		// ---------- INITIALIZSATION ---------- //
@@ -630,7 +623,7 @@ public class MonolithFrame extends JFramePlus {
 		mNew.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				new MonolithFrame(titel, MonolithFrame.this);
+				new MonolithFrame(MonolithFrame.this);
 			}
 		});
 
@@ -742,7 +735,7 @@ public class MonolithFrame extends JFramePlus {
 	      @Override
 		public void actionPerformed(ActionEvent actionEvent) {
 	        AbstractButton aButton = (AbstractButton) actionEvent.getSource();
-	        setLang(LanguageFactory.getLanguageByString(aButton.getText()));
+	        setLanguage(LanguageFactory.getLanguageByString(aButton.getText()));
 	      }
 	    };
 		
@@ -818,8 +811,7 @@ public class MonolithFrame extends JFramePlus {
 				if (getDocText().isEmpty()) {
 					setText(language.quickCode, language);
 				} else {
-					MonolithFrame newCode = new MonolithFrame(titel, MonolithFrame.this);
-					newCode.setText(language.quickCode, language);
+					new MonolithFrame(MonolithFrame.this).setText(language.quickCode, language);
 				}
 			}
 		});
@@ -858,7 +850,7 @@ public class MonolithFrame extends JFramePlus {
 			public void actionPerformed(ActionEvent event) {
 				stat.loadStart();
 				buildNew = false;
-				MonolithFrame.this.buildAndRun(CodeBuilder.BUILD);
+				MonolithFrame.this.buildAndRun(CodeBuilder.BuildMode.BUILD);
 				stat.loadEnd();
 			}
 		});
@@ -869,7 +861,7 @@ public class MonolithFrame extends JFramePlus {
 			public void actionPerformed(ActionEvent event) {
 				stat.loadStart();
 				buildNew = false;
-				MonolithFrame.this.buildAndRun(CodeBuilder.RUN);
+				MonolithFrame.this.buildAndRun(CodeBuilder.BuildMode.RUN);
 				stat.loadEnd();
 			}
 		});
@@ -880,7 +872,7 @@ public class MonolithFrame extends JFramePlus {
 			public void actionPerformed(ActionEvent event) {
 				stat.loadStart();
 				buildNew = false;
-				MonolithFrame.this.buildAndRun(CodeBuilder.BUILD_N_RUN);
+				MonolithFrame.this.buildAndRun(CodeBuilder.BuildMode.BUILD_N_RUN);
 				stat.loadEnd();
 			}
 		});
@@ -891,7 +883,7 @@ public class MonolithFrame extends JFramePlus {
 			public void actionPerformed(ActionEvent event) {
 				stat.loadStart();
 				buildNew = true;
-				MonolithFrame.this.buildAndRun(CodeBuilder.BUILD_N_RUN);
+				MonolithFrame.this.buildAndRun(CodeBuilder.BuildMode.BUILD_N_RUN);
 				stat.loadEnd();
 			}
 		});
@@ -949,7 +941,7 @@ public class MonolithFrame extends JFramePlus {
 						build += temp2 + "\t";
 					}
 				}
-				new MonolithFrame(titel, MonolithFrame.this).setText(build);
+				new MonolithFrame(MonolithFrame.this).setText(build);
 			}
 		});
 
@@ -1045,7 +1037,7 @@ public class MonolithFrame extends JFramePlus {
 							if (tField.getText().equals("")) {
 								readFromFile(file.getAbsolutePath());
 							} else {
-								new MonolithFrame(file.getAbsolutePath(), "Filename", MonolithFrame.this);
+								new MonolithFrame(file.getAbsolutePath(), MonolithFrame.this);
 							}
 						}
 						evt.dropComplete(true);
@@ -1243,7 +1235,7 @@ public class MonolithFrame extends JFramePlus {
 	 * gets saved. On Windows the CMD gets called to compile the .java file into
 	 * a .class file. Then the created .class file gets called.
 	 */
-	public void buildAndRun(int code) {
+	public void buildAndRun(CodeBuilder.BuildMode mode) {
 
 		/*
 		if ((code == CodeBuilder.BUILD_N_RUN || code == CodeBuilder.BUILD) && !language.isCompilable
@@ -1310,11 +1302,11 @@ public class MonolithFrame extends JFramePlus {
 			}
 		}
 
-		if (code == CodeBuilder.BUILD)
+		if (mode == CodeBuilder.BuildMode.BUILD)
 			buildConsole.build();
-		else if (code == CodeBuilder.RUN)
+		else if (mode == CodeBuilder.BuildMode.RUN)
 			buildConsole.run();
-		else if (code == CodeBuilder.BUILD_N_RUN)
+		else if (mode == CodeBuilder.BuildMode.BUILD_N_RUN)
 			buildConsole.buildRun();
 	}
 
@@ -1539,14 +1531,14 @@ public class MonolithFrame extends JFramePlus {
 		try {
 			tField.setText("");
 			document.insertString(0, text, null);
-		} catch (BadLocationException e) {
+		} catch (Exception e) {
 			console.println(e.getMessage(), Console.err);
 			if(GlobalVariables.debug) e.printStackTrace();
 		}
 
 		tField.setDocument(document);
 		splitter.setTopComponent(tScrollPane);
-		setLang(language);
+		setLanguage(language);
 	}
 	
 	/**
@@ -1665,9 +1657,14 @@ public class MonolithFrame extends JFramePlus {
 	 * Set editor language
 	 * @param language - Language language to be set
 	 */
-	public void setLang(Language language) {
+	public void setLanguage(Language language) {
 		this.language = language;
-		tField.setSyntaxEditingStyle(language.syntaxConstant);
+		//TODO: Fix JavaScript bug
+		try{
+			tField.setSyntaxEditingStyle(language.syntaxConstant);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		languageButtons[language.index].setSelected(true);
 
 		carretUpdate();
@@ -1780,9 +1777,9 @@ public class MonolithFrame extends JFramePlus {
 				fullName = file.getName();
 				
 				if(LanguageFactory.getLanguageFromFile(fullName) != null)
-					setLang(LanguageFactory.getLanguageFromFile(fullName));					
+					setLanguage(LanguageFactory.getLanguageFromFile(fullName));					
 				else
-					setLang(language);					
+					setLanguage(language);					
 
 			} else {
 				return false;
@@ -1879,7 +1876,7 @@ public class MonolithFrame extends JFramePlus {
 			if (getDocText().isEmpty()) {
 				readFromFile(file.toString());
 			} else {
-				new MonolithFrame(file.toString(), "BLA", MonolithFrame.this);
+				new MonolithFrame(file.toString(), MonolithFrame.this);
 			}
 		}
 
@@ -1969,7 +1966,7 @@ public class MonolithFrame extends JFramePlus {
 	private void overrideTheme(){
 		tField.setTabSize(settings.getSetting(Settings.TAB_SIZE));
 		setFontSize(settings.getSetting(Settings.FONT_SIZE));
-		stat.setBackground(getTextBackground());
+		stat.setBG(bottomLabelPanel.getPanelColor());
 	}
 
 	private void loadIcons(Color c){
@@ -1986,6 +1983,7 @@ public class MonolithFrame extends JFramePlus {
 		iCut = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/cut.png"));
 		iCopy = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/copy.png"));
 		iPaste = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/paste.png"));
+		iConsole = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/console.png"));
 		iRun = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/run.png"));
 		iMath = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/math.png"));
 		iSave = new ImageIcon(MonolithFrame.class.getResource(GlobalVariables.RESOURCE_PATH + "/toolbar/18x18/" + type + "/save.png"));

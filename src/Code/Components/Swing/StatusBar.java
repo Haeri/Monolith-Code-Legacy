@@ -189,8 +189,17 @@ public class StatusBar extends JPanel implements ActionListener {
 	}
 
 	
-	private int doubleRamp(float progress, int offset) {
-		float lerp = (float) (4 * Math.pow((progress - 0.5f), 3) + 0.5f);
+	
+	private float easeInQuad(float t) {
+		return t*t; 
+	}
+	
+	private float easeOutQuad(float t) {
+		return t*(2-t); 
+	}
+	
+	private int doubleRamp(float t, int offset) {
+		float lerp = (float) (t < 0.5f ? easeOutQuad(2f * t) * 0.5f : easeInQuad((2.0f * (t - 0.5f))) * 0.5 + 0.5f) ;
 		return (int) ((width - offset) * lerp);
 	}
 }

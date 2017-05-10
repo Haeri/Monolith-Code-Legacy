@@ -18,7 +18,7 @@ public class LanguageFactory {
 	public static Language LANG_H;
 	public static Language LANG_JAVA;
 	public static Language LANG_PYTHON;
-	//public static Language LANG_JAVASCRIPT;
+	public static Language LANG_JAVASCRIPT;
 	public static Language LANG_TYPESCRIPT;
 	public static Language LANG_PHP;
 	public static Language LANG_HTML;
@@ -57,10 +57,11 @@ public class LanguageFactory {
 		LANG_C.name = "C";
 		LANG_C.extension = ".c";
 		LANG_C.compileCommand[OSType.ANY.ordinal()] = "gcc <name>.c -o <name>";
-		LANG_C.runCommand[OSType.ANY.ordinal()] = "<path><name>";
+		LANG_C.runCommand[OSType.ANY.ordinal()] = "./<name>";
+		LANG_C.runCommand[OSType.WIN.ordinal()] = "<path><name>.exe";
 		LANG_C.isCompilable = true;
 		LANG_C.isRunnable = true;
-		LANG_C.quickCode = "#include <stdio.h>\n\nint main(){\n\tprintf(\"Hello World!\\n\");\n\treturn 0;\n}";
+		LANG_C.quickCode = "#include <stdio.h>\n\nint main(){\n\tprintf(\"Hello World!\\n\");\n\tfflush(stdout);\n\treturn 0;\n}";
 		LANG_C.extensionFilter = new ExtensionFilter("C File (*.c)", "*" + LANG_C.extension);
 		LANG_C.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_C;
 		LANG_C.defaultSugetedName = "MyCCode" + LANG_C.extension;
@@ -71,7 +72,7 @@ public class LanguageFactory {
 		LANG_CPP.name = "C++";
 		LANG_CPP.extension = ".cpp";
 		LANG_CPP.compileCommand[OSType.ANY.ordinal()] = "g++ -std=c++11 <name>.cpp -o <name>";
-		LANG_CPP.runCommand[OSType.ANY.ordinal()] = "<path><name>";
+		LANG_CPP.runCommand[OSType.ANY.ordinal()] = "<path><name>.exe";
 		LANG_CPP.isCompilable = true;
 		LANG_CPP.isRunnable = true;
 		LANG_CPP.quickCode = "#include <iostream>\n\nusing namespace std;\n\nint main(){\n	cout << \"Hello World\" << endl;\n	return 0;\n}";
@@ -154,17 +155,17 @@ public class LanguageFactory {
 		languages.add(LANG_PYTHON);
 		
 		// javaScript
-//		LANG_JAVASCRIPT = new Language();
-//		LANG_JAVASCRIPT.name = "JavaScript";
-//		LANG_JAVASCRIPT.extension = ".js";
-//		LANG_JAVASCRIPT.isCompilable = false;
-//		LANG_JAVASCRIPT.isRunnable = true;
-//		LANG_JAVASCRIPT.runCommand[OSType.ANY.ordinal()] = "node <name>.js";
-//		LANG_JAVASCRIPT.quickCode ="console.log(\"Hello world\");";
-//		LANG_JAVASCRIPT.extensionFilter = new ExtensionFilter("JavaScript (*.js)", "*" + LANG_JAVASCRIPT.extension);
-//		LANG_JAVASCRIPT.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
-//		LANG_JAVASCRIPT.defaultSugetedName = "MyJavaScriptCode" + LANG_JAVASCRIPT.extension;
-//		languages.add(LANG_JAVASCRIPT);
+		LANG_JAVASCRIPT = new Language();
+		LANG_JAVASCRIPT.name = "JavaScript";
+		LANG_JAVASCRIPT.extension = ".js";
+		LANG_JAVASCRIPT.isCompilable = false;
+		LANG_JAVASCRIPT.isRunnable = true;
+		LANG_JAVASCRIPT.runCommand[OSType.ANY.ordinal()] = "node <name>.js";
+		LANG_JAVASCRIPT.quickCode ="console.log(\"Hello world\");";
+		LANG_JAVASCRIPT.extensionFilter = new ExtensionFilter("JavaScript (*.js)", "*" + LANG_JAVASCRIPT.extension);
+		LANG_JAVASCRIPT.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
+		LANG_JAVASCRIPT.defaultSugetedName = "MyJavaScriptCode" + LANG_JAVASCRIPT.extension;
+		languages.add(LANG_JAVASCRIPT);
 		
 		// typeScript
 		LANG_TYPESCRIPT = new Language();

@@ -32,6 +32,9 @@ public class JPanelPlus extends JPanel{
         repaint();
     }
 
+    public Color getPanelColor(){
+    	return bgPrime;
+    }
 
     @Override
     protected void paintComponent(Graphics g)

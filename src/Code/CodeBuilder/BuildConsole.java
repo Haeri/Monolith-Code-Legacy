@@ -6,6 +6,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -18,9 +20,11 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import Code.Components.Swing.JFramePlus;
+import Code.Components.Swing.StatusBar;
 import Code.Console.Console;
 import Code.Languages.Language;
 import Code.Core.GlobalVariables;
@@ -36,6 +40,7 @@ public class BuildConsole extends Console{
 	public boolean isKill;
 	private int width;
 	
+	public StatusBar stat;
 	CodeBuilder builder;
 	JFramePlus frame;
 	JButton btStop;
@@ -71,6 +76,9 @@ public class BuildConsole extends Console{
 		btStop = new JButton("Stop", MonolithFrame.iStop);
 		btStop.setEnabled(false);
 		btStop.setMargin(new Insets (2, 2, 2, 2));
+		
+		JToggleButton tglNative = new JToggleButton(MonolithFrame.iConsole);
+		tglNative.setMargin(new Insets (2, 2, 2, 2));
 		JButton btEdit = new JButton(MonolithFrame.iBuildConfig);
 		btEdit.setMargin(new Insets (2, 2, 2, 2));
 		
@@ -79,11 +87,17 @@ public class BuildConsole extends Console{
 		menuBar.add(btBuildRun);
 		menuBar.add(btStop);
 		menuBar.add(Box.createGlue());
+		//menuBar.add(tglNative);
 		menuBar.add(btEdit);
+		
+		stat = new StatusBar();
+		stat.setPreferredSize(new Dimension(0, 4));
+		stat.setBG(inPane.getBackground());
 		
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(this, BorderLayout.CENTER);
-		frame.add(menuBar, BorderLayout.NORTH);
+		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
+		frame.getContentPane().add(stat, BorderLayout.SOUTH);
 		
 		frame.setIconImage(icon.getImage());
 
@@ -129,6 +143,17 @@ public class BuildConsole extends Console{
 				stop();
 			}
 		});
+		
+		// Toggle native
+		tglNative.addItemListener(new ItemListener() {
+			   public void itemStateChanged(ItemEvent ev) {
+			      if(ev.getStateChange()==ItemEvent.SELECTED){
+			        System.out.println("button is selected");
+			      } else if(ev.getStateChange()==ItemEvent.DESELECTED){
+			        System.out.println("button is not selected");
+			      }
+			   }
+			});
 		
 		// Edit
 		btEdit.addMouseListener(new MouseAdapter() {
@@ -181,23 +206,24 @@ public class BuildConsole extends Console{
 
 	public void build(){
 		renewBuilder();
-		builder.begin(CodeBuilder.BUILD);
+		builder.begin(CodeBuilder.BuildMode.BUILD);
 	}
 	
 	public void run(){
 		renewBuilder();
-		builder.begin(CodeBuilder.RUN);
+		builder.begin(CodeBuilder.BuildMode.RUN);
 	}
 	
 	public void buildRun(){
 		renewBuilder();
-		builder.begin(CodeBuilder.BUILD_N_RUN);
+		builder.begin(CodeBuilder.BuildMode.BUILD_N_RUN);
 	}
 	
 	public void stop(){
 		 if (builder != null){
 			 builder.kill();
 			 btStop.setEnabled(false);
+			 stat.loadEnd();
 		 }
 	}
 	
@@ -226,6 +252,7 @@ public class BuildConsole extends Console{
 		CodeBuilder newbuilder = new CodeBuilder(path, fullname, language, this, parent.settings);
 		builder = newbuilder;
 		btStop.setEnabled(true);
+		stat.loadStart();
 	}
 
 }

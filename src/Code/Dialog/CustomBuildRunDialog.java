@@ -47,6 +47,7 @@ import javax.swing.UIManager;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import javax.swing.JComboBox;
+import javax.swing.Box;
 
 public class CustomBuildRunDialog extends JDialog{
 	
@@ -55,7 +56,7 @@ public class CustomBuildRunDialog extends JDialog{
 	private JCheckBox checkBoxExec;
 	private JTextPane execTextPane, buildTextPane;
 	private JButton btnSave, btnCancel;
-	private boolean tempActiveBuild, tempActiveRun ;
+	private boolean tempActiveBuild, tempActiveRun, tempUseNative ;
 	private Style style, defaultStyle;
 	private JLabel lblUseAndTo;
 	private CustomCommandEntry cce;
@@ -69,6 +70,8 @@ public class CustomBuildRunDialog extends JDialog{
 	private JPanel langPanel;
 	private JLabel lblSelectLanguage;
 	private JComboBox<Object> LanguageComboBox;
+	private JCheckBox chckbxUseNativeConsole;
+	private Component horizontalStrut;
 	
 	public CustomBuildRunDialog(JFrame frame, Language language, String name, String path){
 		super(frame);
@@ -77,6 +80,32 @@ public class CustomBuildRunDialog extends JDialog{
 	
 		
 		getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		langPanel = new JPanel();
+		langPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		FlowLayout flowLayout = (FlowLayout) langPanel.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		getContentPane().add(langPanel, BorderLayout.NORTH);
+		
+		lblSelectLanguage = new JLabel("Select Language");
+		langPanel.add(lblSelectLanguage);
+		
+		LanguageComboBox = new JComboBox<Object>(LanguageFactory.languages.toArray());
+		LanguageComboBox.setSelectedItem(language);
+		langPanel.add(LanguageComboBox);
+		
+		horizontalStrut = Box.createHorizontalStrut(100);
+		langPanel.add(horizontalStrut);
+		
+		chckbxUseNativeConsole = new JCheckBox("Use Native Console");
+		langPanel.add(chckbxUseNativeConsole);
+		
+		// Language comboBox
+		LanguageComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				showLanguageSettings((Language) LanguageComboBox.getSelectedItem());
+			}
+		});
 			
 		panel = new JPanel();
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -144,15 +173,20 @@ public class CustomBuildRunDialog extends JDialog{
 		lblUseAndTo.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		panel.add(lblUseAndTo);
 		
+		
+		// Use Native Console
+		chckbxUseNativeConsole.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				tempUseNative = chckbxUseNativeConsole.isSelected();
+			}
+		});
+		
 		// Build CheckBox
 		checkBoxBuild.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (checkBoxBuild.isSelected()) {
-					tempActiveBuild = true;
-				} else {
-					tempActiveBuild = false;
-				}
+				tempActiveBuild = checkBoxBuild.isSelected();
 				setActiveBuild(tempActiveBuild);
 			}
 		});
@@ -161,11 +195,7 @@ public class CustomBuildRunDialog extends JDialog{
 		checkBoxExec.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (checkBoxExec.isSelected()) {
-					tempActiveRun = true;
-				} else {
-					tempActiveRun = false;
-				}
+				tempActiveRun = checkBoxExec.isSelected();
 				setActiveRun(tempActiveRun);
 			}
 		});
@@ -199,19 +229,6 @@ public class CustomBuildRunDialog extends JDialog{
 		
 		style = execTextPane.addStyle("MyHilite", null);
 		
-		langPanel = new JPanel();
-		langPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		FlowLayout flowLayout = (FlowLayout) langPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		getContentPane().add(langPanel, BorderLayout.NORTH);
-		
-		lblSelectLanguage = new JLabel("Select Language");
-		langPanel.add(lblSelectLanguage);
-		
-		LanguageComboBox = new JComboBox<Object>(LanguageFactory.languages.toArray());
-		LanguageComboBox.setSelectedItem(language);
-		langPanel.add(LanguageComboBox);
-		
 		JPanel inputPanel = new JPanel();
 		FlowLayout fl_inputPanel = (FlowLayout) inputPanel.getLayout();
 		fl_inputPanel.setAlignment(FlowLayout.RIGHT);
@@ -224,18 +241,12 @@ public class CustomBuildRunDialog extends JDialog{
 		btnCancel = new JButton("Cancel");
 		inputPanel.add(btnCancel);
 		
-		// Language comboBox
-		LanguageComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				showLanguageSettings((Language) LanguageComboBox.getSelectedItem());
-			}
-		});
-		
 		// Save Button
 		btnSave.addActionListener(new ActionListener() {		
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				cce.useNativeConsole = tempUseNative;
 				cce.isCustomBuildCommand = tempActiveBuild;
 				cce.isCustomRunCommand = tempActiveRun;
 				cce.customBuildCommand = buildTextPane.getText();
@@ -288,12 +299,14 @@ public class CustomBuildRunDialog extends JDialog{
 		checkBoxBuild.setSelected(cce.isCustomBuildCommand);
 		buildTextPane.setText(cce.customBuildCommand);
 		
+		chckbxUseNativeConsole.setSelected(cce.useNativeConsole);
+
 		checkBoxExec.setSelected(cce.isCustomRunCommand);
 		execTextPane.setText(cce.customRunCommand);
 		
+		
 		setActiveBuild(cce.isCustomBuildCommand);
 		setActiveRun(cce.isCustomRunCommand);
-		
 		
 		
 		recognizeText(execDoc);

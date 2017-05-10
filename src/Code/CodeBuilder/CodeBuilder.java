@@ -13,13 +13,17 @@ import Code.Languages.CustomCommandSerializer;
 import Code.Languages.Language;
 import Code.Languages.LanguageFactory;
 
+
 public class CodeBuilder extends Thread {
+	public enum BuildMode{
+		BUILD, RUN, BUILD_N_RUN, FREE_BUILD;
+	}
 	private String path, name, fullname;
 	private Language language;
 	private BuildConsole con;
 	private Process pro;
 	private String line;
-	private String buildCommand, runCommand;
+	private String buildCommand, runCommand, freeCommand;
 
 	private InputStream inStream, inErrStream;
 	private OutputStream outStream;
@@ -27,13 +31,7 @@ public class CodeBuilder extends Thread {
 	private Settings settings;
 
 	private CustomCommandEntry cce;
-	private int mode = -1;
-	
-	public static final int BUILD = 0;
-	public static final int RUN = 1;
-	public static final int BUILD_N_RUN = 2;
-	public static final int FREE_RUN = 3;
-	
+	private BuildMode mode;
 	
 	public CodeBuilder(String path, String fullname, Language language, BuildConsole con, Settings settings) {
 		this.path = path.replaceAll("\\\\", "/");
@@ -54,7 +52,7 @@ public class CodeBuilder extends Thread {
 		con.calculateWidth(line);
 	}
 
-	public void begin(int mode) {
+	public void begin(BuildMode mode) {
 
 		name = LanguageFactory.getName(fullname);
 		
@@ -81,25 +79,38 @@ public class CodeBuilder extends Thread {
  			runCommand = parseCommand(cce.customRunCommand);
  		}
 		
+ 		
 		// Print if mode mismatch
-		if(mode == BUILD_N_RUN && buildCommand == null){
+		if(mode == BuildMode.BUILD_N_RUN && buildCommand == null){
 			con.println("No BUILD command available. Skipping BUILD", Console.warn);
-			mode = RUN;
-		}else if(mode == BUILD_N_RUN && runCommand == null){
+			mode = BuildMode.RUN;
+		}else if(mode == BuildMode.BUILD_N_RUN && runCommand == null){
 			con.println("No RUN command available. Skipping RUN\n", Console.warn);		
-			mode = BUILD;
+			mode = BuildMode.BUILD;
 		}
-		if(mode == BUILD && buildCommand == null){
+		if(mode == BuildMode.BUILD && buildCommand == null){
 			con.println("No BUILD command available. Skipping BUILD", Console.warn);
 			con.stop();
 			return;
 		}
-		if(mode == RUN && runCommand == null){
+		if(mode == BuildMode.RUN && runCommand == null){
 			con.println("No RUN command available. Skipping RUN\n", Console.warn);
 			con.stop();
 			return;
 		}
 		
+		// Override if native console
+		if(cce.useNativeConsole){
+			if(mode == BuildMode.BUILD_N_RUN){
+				freeCommand = NativeConsole.createNativeBuildNRunCommand(fullname, path, buildCommand, runCommand);
+			}else if (mode == BuildMode.BUILD){
+				freeCommand = NativeConsole.createNativeBuildCommand(fullname, path, buildCommand);
+			}else if (mode == BuildMode.RUN){
+				freeCommand = NativeConsole.createNativeBuildCommand(fullname, path, runCommand); 	 			
+			}
+			mode = BuildMode.FREE_BUILD;
+		}
+
 		this.mode = mode;
 		this.start();
 	}
@@ -113,37 +124,39 @@ public class CodeBuilder extends Thread {
 		con.println("\n" + line);
 
 		// Build
-		if (mode == 0 || mode == 2) {
+		if (mode == BuildMode.BUILD || mode == BuildMode.BUILD_N_RUN) {
 			con.println(buildCommand, Console.userIn);
 			con.println("> Compiling " + fullname + " in " + path);
 
 			try {
-				errBuild = exec(buildCommand);
+				errBuild = exec(buildCommand, path);
 			} catch (Exception e) {
 				con.println(e.getMessage(), Console.err);
 				if(GlobalVariables.debug) e.printStackTrace();
 				errBuild = true;
 			}
 
-			if (!errBuild)
+			if (!errBuild){
 				con.println("> Compilation finished successfully");
-			else {
+				con.stat.confirm();
+			}else {
 				con.println("> Compilation failed", Console.errMute);
+				con.stat.error();
 			}
 		}
 
-		if (mode == 2 && !errBuild) {
+		if (mode == BuildMode.BUILD_N_RUN && !errBuild) {
 			con.println(line);
 		}
 
 		// Run
-		if ((mode == 1 || mode == 2) && !errBuild) {
+		if ((mode == BuildMode.RUN || mode == BuildMode.BUILD_N_RUN) && !errBuild) {
 			con.println(runCommand, Console.userIn);
-			con.println("> " + fullname + " outputs:\n");
+			con.println("> " + name + " outputs:\n");
 			boolean errRun = false;
 
 			try {
-				errRun = exec(runCommand);
+				errRun = exec(runCommand, path);
 			} catch (Exception e) {
 				con.println(e.getMessage(), Console.err);
 				if(GlobalVariables.debug) e.printStackTrace();
@@ -151,10 +164,43 @@ public class CodeBuilder extends Thread {
 			}
 
 			con.println("");
-			if (!errRun)
-				con.println("> " + fullname + " was successfully executed.");
-			else
+			if (!errRun){
+				con.println("> " + name + " was successfully executed");
+				con.stat.confirm();
+			}
+			else{
 				con.println("> Error while executing " + fullname, Console.errMute);
+				con.stat.error();
+			}
+		}
+		
+		// Free build
+		if(mode == BuildMode.FREE_BUILD){
+			boolean errFree = false;
+			
+			if(cce.useNativeConsole)
+				con.println("> Running command in native terminal");		
+			else
+				con.println(freeCommand, Console.userIn);
+			
+			con.println(freeCommand);
+				
+			try {
+				errFree = exec(freeCommand, path);
+			} catch (Exception e) {
+				con.println(e.getMessage(), Console.err);
+				if(GlobalVariables.debug) e.printStackTrace();
+				errFree = true;
+			}
+			
+			if (!errFree){
+				con.println("> successfully executed");
+				con.stat.confirm();
+			}
+			else{
+				con.println("> Error while executing", Console.errMute);
+				con.stat.error();
+			}
 		}
 
 		con.println(line + "\n");
@@ -162,9 +208,8 @@ public class CodeBuilder extends Thread {
 	}
 	
 
-	//TODO Still broken for gcc and g++
-	private boolean exec(String command) throws Exception {			
-		pro = Runtime.getRuntime().exec(command, null, new File(path));
+	private boolean exec(String command, String path) throws Exception {			
+		pro = Runtime.getRuntime().exec(command, null, new File(path+"/"));
 
 		outStream = pro.getOutputStream();
 		inStream = pro.getInputStream();

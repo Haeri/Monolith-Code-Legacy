@@ -30,7 +30,7 @@ public class FileNameTest {
 		
 		for (Language l : LanguageFactory.languages) {
 			MonolithFrame mf = new MonolithFrame("Test");
-			mf.setLang(l);
+			mf.setLanguage(l);
 			mf.setText("Hello");
 			mf.fullName = mf.suggetFileName();
 			mf.path = dir.getAbsolutePath() + "/";

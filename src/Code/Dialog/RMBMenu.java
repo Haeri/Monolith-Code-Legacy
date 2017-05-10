@@ -62,7 +62,7 @@ public class RMBMenu extends JPopupMenu{
 			public void actionPerformed(ActionEvent e) {
 				motherFrame.stat.loadStart();
 				motherFrame.buildNew = false;
-				motherFrame.buildAndRun(CodeBuilder.BUILD_N_RUN);
+				motherFrame.buildAndRun(CodeBuilder.BuildMode.BUILD_N_RUN);
 				motherFrame.stat.loadEnd();;
 			}
 		});
