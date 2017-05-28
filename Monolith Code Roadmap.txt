@@ -29,12 +29,11 @@ Improvements:
 - Better java class name detection
 - Better Math with algebra
 - New Line viewport not aligned with border.
-- Allow for native terminal to execute build and run
 - API/Code cleanup
 - Documentation
 - Pack icon atlas
 - Bind console font size to text
-- Give Build Console its own status bar
+- Load native terminal commands from config
 
 Bugs
 - Console not scrolling 100% down
@@ -42,5 +41,8 @@ Bugs
 - Symbols not opening after closing
 - Increase margin top of textField
 
+
 Done:
 + Custom build/run commands
++ Allow for native terminal to execute build and run
++ Give Build Console its own status bar

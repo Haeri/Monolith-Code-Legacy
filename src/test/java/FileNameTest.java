@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import Code.Core.MonolithFrame;
-import Code.Languages.Language;
-import Code.Languages.LanguageFactory;
+import main.java.net.monolith.Language;
+import main.java.net.monolith.LanguageFactory;
+import main.java.net.monolith.MonolithFrame;
 
 public class FileNameTest {
 	
@@ -29,7 +29,7 @@ public class FileNameTest {
 		dir.mkdir();
 		
 		for (Language l : LanguageFactory.languages) {
-			MonolithFrame mf = new MonolithFrame("Test");
+			MonolithFrame mf = new MonolithFrame(null, null);
 			mf.setLanguage(l);
 			mf.setText("Hello");
 			mf.fullName = mf.suggetFileName();
