@@ -255,7 +255,6 @@ public class MonolithFrame extends JFramePlus {
 		
 		// Window Buildup
 		this.setMinimumSize(new Dimension(300, 100));
-		//this.setIconImage(icon.getImage());
 		getContentPane().setLayout(new BorderLayout());
 
 		// Pin Button
@@ -1208,12 +1207,15 @@ public class MonolithFrame extends JFramePlus {
 	}
 
 	/**
-	 * Build And Run First the name of the class gets detected. Then the file
-	 * gets saved. On Windows the CMD gets called to compile the .java file into
-	 * a .class file. Then the created .class file gets called.
+	 * Build And Run
+	 * First the name of the class gets detected. Then the file
+	 * gets saved. Then a process is created that executes according
+	 * to the declared mode.
+	 * @param mode the mode that should be used. Either BUILD, RUN, BUILD_N_RUN or FREE_BUILD;
 	 */
 	public void buildAndRun(CodeBuilder.BuildMode mode) {
 
+		// Old check if a Build/Run is allowed for the current language
 		/*
 		if ((code == CodeBuilder.BUILD_N_RUN || code == CodeBuilder.BUILD) && !language.isCompilable
 				&& !CustomCommandSerializer.getCCE(language.name).isCustomBuildCommand) {

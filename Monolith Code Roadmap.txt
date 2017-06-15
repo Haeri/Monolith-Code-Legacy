@@ -27,13 +27,12 @@ Improvements:
 - Upgrade to searchPlus
 - Load language as plugins
 - Better java class name detection
-- Better Math with algebra
+- Better Math with algebra solver
 - New Line viewport not aligned with border.
 - API/Code cleanup
 - Documentation
 - Pack icon atlas
 - Bind console font size to text
-- Load native terminal commands from config
 
 Bugs
 - Console not scrolling 100% down
@@ -46,3 +45,4 @@ Done:
 + Custom build/run commands
 + Allow for native terminal to execute build and run
 + Give Build Console its own status bar
++ Load native terminal commands from config
