@@ -24,9 +24,9 @@ SCREENSHOT:
 ![screenshot](http://monolith-code.net.tiberius.sui-inter.net/Upload/Monolith_Code_Gif.gif)
  
  
-DEPENDENCIES (jar files included) 
-[RSyntaxTextArea](https://github.com/Haeri/RSyntaxTextArea)
-[AutoComplete](https://github.com/bobbylight/AutoComplete)
-[RSTALanguageSupport](https://github.com/bobbylight/RSTALanguageSupport)
-[jhpropertiestyp](https://sourceforge.net/projects/jhpropertiestyp)
-rhino-1.7.6
+DEPENDENCIES (jar files included):
+- [RSyntaxTextArea](https://github.com/Haeri/RSyntaxTextArea)
+- [AutoComplete](https://github.com/bobbylight/AutoComplete)
+- [RSTALanguageSupport](https://github.com/bobbylight/RSTALanguageSupport)
+- [jhpropertiestyp](https://sourceforge.net/projects/jhpropertiestyp)
+- [rhino-1.7.6](https://mvnrepository.com/artifact/org.mozilla/rhino/1.7.6)
