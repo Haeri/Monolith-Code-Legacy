@@ -38,7 +38,7 @@ Bugs
 - Console not scrolling 100% down
 - FileChooser returns file without extension
 - Symbols not opening after closing
-- Increase margin top of textField
+- Increase margin top of textField (Bug in RSyntaxTextArea, waiting to be resolved)
 
 
 Done:

@@ -117,8 +117,8 @@ public class MonolithFrame extends JFramePlus {
 	private JCheckBoxMenuItem 				mCon, mPgrp, mLineB;
 	private JRadioButtonMenuItem[] 			languageButtons;
 	private JSplitPaneWithZeroSizeDivider 	splitter;
-	private Gutter		gutter;
-	private JViewport 	jvp;
+	private Gutter							gutter;
+	private JViewport 						jvp;
 
 	// Misc Components
 	public Settings 		settings;
@@ -129,16 +129,16 @@ public class MonolithFrame extends JFramePlus {
 	private BackgroundSave 	backgroundSave;
 	
 	// Primitives
-	public String 	fullName = "";
-	public String 	path = "/";
-	public boolean 	buildNew;
+	public String 			fullName = "";
+	public String 			path = "/";
+	public boolean 			buildNew;
 
-	private Language 	language;
-	private int 		chars = 0;
-	private int 		dividerLocation = 0;
-	private double 		ans = 0;
-	private boolean 	hasDir, hasChange, isReading, ignoreNameDiscrepency, isPin;
-	private static boolean isFirst = true;
+	private Language 		language;
+	private int 			chars = 0;
+	private int 			dividerLocation = 0;
+	private double 			ans = 0;
+	private boolean 		hasDir, hasChange, isReading, ignoreNameDiscrepency, isPin;
+	private static boolean 	isFirst = true;
 
 	// Defaults
 	private	final ExtensionFilter EXTENSION_FILTER_ALL = new ExtensionFilter("All Files", "*.*");

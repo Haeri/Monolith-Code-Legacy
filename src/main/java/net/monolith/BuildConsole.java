@@ -190,9 +190,9 @@ public class BuildConsole extends Console{
 		
 		// decide best side
 		if(right > left){
-			frame.setLocation((int) (point.getX() + dim.getWidth())-14, (int) point.getY());
+			frame.setLocation((int) (point.getX() + dim.getWidth())-16, (int) point.getY());
 		}else{
-			frame.setLocation((int) (point.getX() - minWidth)+14, (int) point.getY());	
+			frame.setLocation((int) (point.getX() - minWidth)+16, (int) point.getY());	
 		}
 	}
 

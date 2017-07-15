@@ -70,7 +70,8 @@ public class LanguageFactory {
 		LANG_CPP.name = "C++";
 		LANG_CPP.extension = ".cpp";
 		LANG_CPP.compileCommand[OSType.ANY.ordinal()] = "g++ -std=c++11 <name>.cpp -o <name>";
-		LANG_CPP.runCommand[OSType.ANY.ordinal()] = "<path><name>.exe";
+		LANG_CPP.runCommand[OSType.ANY.ordinal()] = "./<name>";
+		LANG_CPP.runCommand[OSType.WIN.ordinal()] = "<path><name>.exe";
 		LANG_CPP.isCompilable = true;
 		LANG_CPP.isRunnable = true;
 		LANG_CPP.quickCode = "#include <iostream>\n\nusing namespace std;\n\nint main(){\n	cout << \"Hello World\" << endl;\n	return 0;\n}";
