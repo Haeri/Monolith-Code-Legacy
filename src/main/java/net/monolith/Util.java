@@ -1,5 +1,9 @@
 package main.java.net.monolith;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -32,5 +36,26 @@ public class Util {
 	 public static <T> void println(T generic){
 		 if(GlobalVariables.debug)
 			 System.out.println(generic);
+	 }
+	 
+	 
+	 public static byte[] getMACAddress() throws SocketException, UnknownHostException {
+		    InetAddress address = InetAddress.getLocalHost();
+		    NetworkInterface networkInterface = NetworkInterface.getByInetAddress(address);
+
+		    return networkInterface.getHardwareAddress();
+		}
+	 
+	 public static String getUniqueId(){
+		 try{
+			 byte[] macAddress = getMACAddress();
+			 String ret = "";
+			 for (int byteIndex = 0; byteIndex < macAddress.length; byteIndex++) {
+				 ret += String.format("%02X%s", macAddress[byteIndex], (byteIndex < macAddress.length - 1) ? "-" : "");
+			 }
+			 return ret;
+		 }catch(Exception e){
+			return "";
+		}
 	 }
 }

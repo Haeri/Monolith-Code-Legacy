@@ -8,7 +8,7 @@ public class GlobalVariables {
 	// Version
 	public static final String MONOLITH_NAME = "Monolith Code";
 	public static final String VERSION = "0.0.8";
-	public static final int BUILD = 63;
+	public static final int BUILD = 64;
 	public static boolean BETA = false;
 	
 	// Paths
@@ -25,4 +25,5 @@ public class GlobalVariables {
 	public static boolean debug = false;
 	public static String osName = "";
 	public static OSType osType;
+	public static String uniqueID = Util.getUniqueId();
 }

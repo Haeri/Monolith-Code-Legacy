@@ -889,7 +889,7 @@ public class MonolithFrame extends JFramePlus {
 			public void actionPerformed(ActionEvent event) {
 				JOptionPane.showMessageDialog(
 						MonolithFrame.this,
-						"<html><b>" + GlobalVariables.MONOLITH_NAME + " v" + GlobalVariables.VERSION + ":" + GlobalVariables.BUILD + "</b><br> by Haeri Studios &#9400;<br>For more information visit <br><a href='monolith-code-net'>monolith-code.net</a></html>",
+						"<html><b>" + GlobalVariables.MONOLITH_NAME + " v" + GlobalVariables.VERSION + ":" + GlobalVariables.BUILD + "</b><br> by Haeri Studios &#9400;<br>For more information visit <br><a href='http://monolith-code.net.tiberius.sui-inter.net/'>monolith-code.net</a></html>",
 						GlobalVariables.MONOLITH_NAME,
 						JOptionPane.INFORMATION_MESSAGE);
 			}
