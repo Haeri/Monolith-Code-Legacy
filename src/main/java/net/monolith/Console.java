@@ -35,9 +35,19 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
-
 public class Console extends JPanel{
-
+    
+	class PrintEntry{
+    	String print;
+    	AttributeSet attrib;
+    	
+    	PrintEntry(String print, AttributeSet attrib){
+    		this.print = print;
+    		this.attrib = attrib;
+    	}
+    }
+    
+	private List<PrintEntry> printQueue = new ArrayList<PrintEntry>();
 	private static final long serialVersionUID = 1L;
 
 	public final String def_text;
@@ -146,6 +156,16 @@ public class Console extends JPanel{
 		println(def_text, Console.stdOut);
 	}
 
+	public void queueError(String print){
+		printQueue.add(new PrintEntry(print, Console.err));
+	}
+	
+	public void printQueue(){
+		for(int i = 0; i < printQueue.size(); ++i){
+			println(printQueue.get(i).print, printQueue.get(i).attrib);
+		}
+	}
+	
 	public void println(String print[]){
 		println(Arrays.toString(print));
 	}

@@ -258,6 +258,12 @@ public class CodeBuilder extends Thread {
 	public void kill() {
 		if (pro != null) {
 			pro.destroy();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			errBuff.destroy();
 			outBuff.destroy();
 			pro = null;

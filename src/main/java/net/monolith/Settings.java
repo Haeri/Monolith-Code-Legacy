@@ -70,7 +70,7 @@ public class Settings {
 				loadSettingsFromFile();
 			} catch (Exception e) {
 				createSettings();
-				//console.println("Could not delete cofig!\n" + e.getMessage(), Console.err);
+				console.queueError("Could not delete cofig!\n" + e.getMessage());
 				if(GlobalVariables.debug) e.printStackTrace();
 			}
 		} else {

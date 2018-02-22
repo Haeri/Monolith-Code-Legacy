@@ -22,6 +22,7 @@ public class LanguageFactory {
 	public static Language LANG_HTML;
 	public static Language LANG_CSS;
 	public static Language LANG_XML;
+	public static Language LANG_LATEX;
 	public static Language LANG_SQL;
 	
 	public static List<Language> languages;
@@ -214,6 +215,22 @@ public class LanguageFactory {
 		LANG_XML.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_XML;
 		LANG_XML.defaultSugetedName = "MyXMLFile" + LANG_XML.extension;
 		languages.add(LANG_XML);
+		
+		
+		// LATEX
+		LANG_LATEX = new Language();
+		LANG_LATEX.name = "Latex";
+		LANG_LATEX.extension = ".tex";
+		LANG_LATEX.isCompilable = true;
+		LANG_LATEX.isRunnable = true;
+		LANG_LATEX.quickCode = "\\documentclass{article}\n\t\\usepackage[margin=0.7in]{geometry}\n\t\\usepackage[parfill]{parskip}\n\t\\usepackage[utf8]{inputenc}\n\n\n\\begin{document}\n\nHello World\n\n\\end{document}";
+		LANG_LATEX.compileCommand[OSType.ANY.ordinal()] = "pdflatex <name>.tex";
+		LANG_LATEX.runCommand[OSType.WIN.ordinal()] = "\"C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe\" \"<name>.pdf\"";
+		LANG_LATEX.extensionFilter = new ExtensionFilter("Latex File (*.tex)", "*" + LANG_LATEX.extension);
+		LANG_LATEX.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_LATEX;
+		LANG_LATEX.defaultSugetedName = "MyXMLFile" + LANG_LATEX.extension;
+		languages.add(LANG_LATEX);
+		
 		
 		// PHP
 		LANG_PHP = new Language();

@@ -182,8 +182,6 @@ public class MonolithFrame extends JFramePlus {
 			GlobalVariables.osType = OSType.ANY;
 		}
 
-
-
 		// Changes to System Look and Feel
 		try {
 			if (GlobalVariables.osType == OSType.NIX) {
@@ -220,13 +218,16 @@ public class MonolithFrame extends JFramePlus {
 		
 		// ---------- LOADING ----------//
 
+		// Load Settings
+		settings = new Settings(console);
+
 		// Load Font
 		try {
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			InputStream is = getClass().getResourceAsStream(GlobalVariables.RESOURCE_PATH + "/Consolas.ttf");
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, is));
 		} catch (IOException | FontFormatException e) {
-			console.println("Faild to load load default font\n" + e.getMessage(), Console.err);
+			console.queueError("Faild to load default font\n" + e.getMessage());
 			if(GlobalVariables.debug) e.printStackTrace();
 		}
 
@@ -234,12 +235,9 @@ public class MonolithFrame extends JFramePlus {
  		try {
  			CustomCommandSerializer.init();
  		} catch (Exception e) {
- 			console.println("Faild to load load custom commands\n"+ e.getMessage(), Console.err);
+ 			console.queueError("Faild to load custom commands\n"+ e.getMessage());
  			if(GlobalVariables.debug) e.printStackTrace();
  		}
-		
-		// Load Settings
-		settings = new Settings(console);
 		
 		// Load Themes
 		loadThemes();
@@ -1120,6 +1118,8 @@ public class MonolithFrame extends JFramePlus {
 			if (Updater.checkUpdate(this))
 				updateMonolith(true);
 		}
+		
+		console.printQueue();
 	}
 	
 	// Update
@@ -1229,8 +1229,11 @@ public class MonolithFrame extends JFramePlus {
 		}
 		*/
 
-		if (buildConsole != null)
+		
+		
+		if (buildConsole != null){
 			buildConsole.requestFocus();
+		}
 
 		// match file name
 		if (language.forceClassName) {
