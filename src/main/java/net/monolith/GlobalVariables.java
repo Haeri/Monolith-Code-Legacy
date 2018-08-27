@@ -8,7 +8,7 @@ public class GlobalVariables {
 	// Version
 	public static final String MONOLITH_NAME = "Monolith Code";
 	public static final String VERSION = "0.0.8";
-	public static final int BUILD = 67;
+	public static final int BUILD = 68;
 	public static boolean BETA = false;
 	
 	// Paths

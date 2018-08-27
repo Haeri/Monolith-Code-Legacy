@@ -228,7 +228,7 @@ public class LanguageFactory {
 		LANG_LATEX.runCommand[OSType.WIN.ordinal()] = "\"C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe\" \"<name>.pdf\"";
 		LANG_LATEX.extensionFilter = new ExtensionFilter("Latex File (*.tex)", "*" + LANG_LATEX.extension);
 		LANG_LATEX.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_LATEX;
-		LANG_LATEX.defaultSugetedName = "MyXMLFile" + LANG_LATEX.extension;
+		LANG_LATEX.defaultSugetedName = "MyLatexFile" + LANG_LATEX.extension;
 		languages.add(LANG_LATEX);
 		
 		
