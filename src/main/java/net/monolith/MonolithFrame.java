@@ -120,13 +120,16 @@ public class MonolithFrame extends JFramePlus {
 	private Gutter							gutter;
 	private JViewport 						jvp;
 
+	private List<JMenuItem> pluginItems = new ArrayList<JMenuItem>();
+
 	// Misc Components
 	public Settings 		settings;
 
-	private MonolithFrame 	parent;
-	private BuildConsole 	buildConsole;
-	private Document 		document;
-	private BackgroundSave 	backgroundSave;
+	private MonolithFrame   parent;
+	private BuildConsole    buildConsole;
+	private Document        document;
+	private BackgroundSave  backgroundSave;
+	private PluginManager   pluginManager;
 	
 	// Primitives
 	public String 			fullName = "";
@@ -244,6 +247,10 @@ public class MonolithFrame extends JFramePlus {
 
 		// Load Icons
 		loadIcons(tMenuBar.getBackground());
+
+		// Load Plugins
+		pluginManager = new PluginManager();
+		pluginManager.loadPlugins();
 
 		
 		
@@ -373,6 +380,33 @@ public class MonolithFrame extends JFramePlus {
 		mbTools.add(mMath);
 		mbTools.add(mbBin);
 		mbTools.add(mTable);
+		mbTools.addSeparator();
+
+
+		// PLUGINS
+		JMenuItem tmp;
+		for (int i = 0; i < pluginManager.pluginList.size(); i++){
+			final int index = i;
+			tmp = new JMenuItem(pluginManager.pluginList.get(i).getInfo().name);
+			mbTools.add(tmp);
+			//pluginItems.add(tmp);
+
+			tmp.addActionListener(event -> {
+				int mStart = tField.getSelectionStart();
+				int mEnd = tField.getSelectionEnd();
+				String text = tField.getSelectedText();
+				String answer = pluginManager.pluginList.get(index).process(text);
+
+				try {
+					document.insertString(mEnd, answer, null);
+					document.remove(mStart, mEnd - mStart);
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			});
+		}
+
+
 
 		// BUILD
 		mBuild 			= new JMenuItem("Build");

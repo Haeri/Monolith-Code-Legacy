@@ -49,9 +49,17 @@ local.properties
 .scala_dependencies
 .worksheet
 
+#intelliJ
+.idea
+out
+
 # Monolith Code files
 config.ini
 custom_commands.xml
 .classpath
 .project
 autosave/
+.idea/artifacts/monolith.xml
+.idea/libraries/external.xml
+Monolith-Code.iml
+*.class

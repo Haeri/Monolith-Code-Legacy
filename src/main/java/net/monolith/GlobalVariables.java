@@ -8,12 +8,13 @@ public class GlobalVariables {
 	// Version
 	public static final String MONOLITH_NAME = "Monolith Code";
 	public static final String VERSION = "0.0.8";
-	public static final int BUILD = 68;
+	public static final int BUILD = 69;
 	public static boolean BETA = false;
 	
 	// Paths
 	public static final String RESOURCE_PATH = "/main/resources";
 	public static final String AUTOSAVE_PATH = "autosave";
+	public static final String PLUGINS_PATH = "plugins";
 	
 	// Math
 	public static int mathRound = 5;

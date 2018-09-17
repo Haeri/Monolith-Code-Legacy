@@ -7,7 +7,7 @@ MONOLITH CODE ROADMAP
 - Color picker for inline color code
 - Lightweight scrollbar with opacity and transition
 - License MIT
-- Plugin support
+- plugin.Plugin support
 - Console parameter set functions
 - Html based console display
 - Tool chain integration for git
