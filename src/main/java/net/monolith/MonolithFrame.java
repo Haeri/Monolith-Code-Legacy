@@ -249,7 +249,7 @@ public class MonolithFrame extends JFramePlus {
 		loadIcons(tMenuBar.getBackground());
 
 		// Load Plugins
-		pluginManager = new PluginManager();
+		pluginManager = new PluginManager(this);
 		pluginManager.loadPlugins();
 
 		
@@ -382,29 +382,8 @@ public class MonolithFrame extends JFramePlus {
 		mbTools.add(mTable);
 		mbTools.addSeparator();
 
-
 		// PLUGINS
-		JMenuItem tmp;
-		for (int i = 0; i < pluginManager.pluginList.size(); i++){
-			final int index = i;
-			tmp = new JMenuItem(pluginManager.pluginList.get(i).getInfo().name);
-			mbTools.add(tmp);
-			//pluginItems.add(tmp);
-
-			tmp.addActionListener(event -> {
-				int mStart = tField.getSelectionStart();
-				int mEnd = tField.getSelectionEnd();
-				String text = tField.getSelectedText();
-				String answer = pluginManager.pluginList.get(index).process(text);
-
-				try {
-					document.insertString(mEnd, answer, null);
-					document.remove(mStart, mEnd - mStart);
-				} catch (BadLocationException e) {
-					e.printStackTrace();
-				}
-			});
-		}
+		pluginManager.initializePlugins(mbTools);
 
 
 
@@ -1684,6 +1663,22 @@ public class MonolithFrame extends JFramePlus {
 		languageButtons[language.index].setSelected(true);
 
 		carretUpdate();
+	}
+
+	public Language getLanguage() {
+		return language;
+	}
+
+	public void replaceSegemnt(int start, int end, String text){
+		if(start > end ) return;
+
+		try{
+			document.insertString(end, text, null);
+			document.remove(start, end - start);
+		} catch (BadLocationException e) {
+			console.println("Couldn't replace Text!\n" + e.getMessage(), Console.err);
+			if(GlobalVariables.debug) e.printStackTrace();
+		}
 	}
 	
 	public String suggetFileName(){

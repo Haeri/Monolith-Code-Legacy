@@ -8,7 +8,7 @@ public class HelloWorld implements Plugin{
         info.name = "Hello World";
         info.author = "Haeri";
         info.description = "Says Hello World";
-        info.buildNumber = 1;
+        info.version = 1;
     }
 
     @Override
@@ -17,7 +17,10 @@ public class HelloWorld implements Plugin{
     }
 
     @Override
-    public String process(String text) {
-        return text + " [Hello World]";
+    public ResponseData process(ContextData data) {
+        ResponseData res = new ResponseData();
+
+        res.response = "LOL";
+        return res;
     }
 }
