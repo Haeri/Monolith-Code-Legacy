@@ -2,9 +2,12 @@ plugins {
     id 'java'
 }
 
-version '1.0-SNAPSHOT'
+version '0.0.9'
 
-sourceCompatibility = 1.8
+sourceSets {
+	main.java.srcDir 'src/main'
+	test.java.srcDir 'src/test'
+}
 
 repositories {
     mavenCentral()
@@ -12,4 +15,16 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile fileTree(dir: 'lib', include: '*.jar')
+}
+
+jar {
+    archiveName 'monolith.jar'
+	from configurations.compile.collect { zipTree it }
+	manifest {
+        attributes("Implementation-Title": "MonolithCode",
+                   "Implementation-Version": version,
+                   "Main-Class": "net.monolith.Main", 
+                   "Class-Path": ".")
+    }
 }
