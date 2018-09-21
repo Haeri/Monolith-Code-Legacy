@@ -4,7 +4,7 @@
  *  (c) 2015
  */
 
-package main.java.net.monolith;
+package net.monolith;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -214,8 +214,6 @@ public class MonolithFrame extends JFramePlus {
 		// MenuBar
 		tMenuBar = new JMenuBar();
 		this.setJMenuBar(tMenuBar);
-		
-		
 		
 		
 		

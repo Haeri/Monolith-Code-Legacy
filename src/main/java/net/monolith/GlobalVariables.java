@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 public class GlobalVariables {
 
@@ -12,7 +12,7 @@ public class GlobalVariables {
 	public static boolean BETA = false;
 	
 	// Paths
-	public static final String RESOURCE_PATH = "/main/resources";
+	public static final String RESOURCE_PATH = "/resources";
 	public static final String AUTOSAVE_PATH = "autosave";
 	public static final String PLUGINS_PATH = "plugins";
 	

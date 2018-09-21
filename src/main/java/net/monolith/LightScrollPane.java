@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;

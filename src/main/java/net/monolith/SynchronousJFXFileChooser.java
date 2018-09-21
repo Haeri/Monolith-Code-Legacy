@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 import java.io.File;
 import java.util.List;
@@ -48,7 +48,7 @@ public class SynchronousJFXFileChooser {
      * Waits for one second for the dialog-showing task to start in the JavaFX
      * event thread, then throws an IllegalStateException if it didn't start.
      * 
-     * @see #showDialog(java.util.function.Function, long, java.util.concurrent.TimeUnit) 
+     * @see #showDialog(Function, long, TimeUnit)
      * @param <T> the return type of the method, usually File or List&lt;File&gt;
      * @param method a function calling one of the dialog-showing methods
      * @return whatever the method returns
@@ -107,7 +107,7 @@ public class SynchronousJFXFileChooser {
     /**
      * Shows a FileChooser using FileChooser.showOpenDialog().
      * 
-     * @see #showDialog(java.util.function.Function, long, java.util.concurrent.TimeUnit) 
+     * @see #showDialog(Function, long, TimeUnit)
      * @return the return value of FileChooser.showOpenDialog()
      */
     public File showOpenDialog() {
@@ -117,7 +117,7 @@ public class SynchronousJFXFileChooser {
     /**
      * Shows a FileChooser using FileChooser.showSaveDialog().
      * 
-     * @see #showDialog(java.util.function.Function, long, java.util.concurrent.TimeUnit) 
+     * @see #showDialog(Function, long, TimeUnit)
      * @return the return value of FileChooser.showSaveDialog()
      */
     public File showSaveDialog() {
@@ -127,7 +127,7 @@ public class SynchronousJFXFileChooser {
     /**
      * Shows a FileChooser using FileChooser.showOpenMultipleDialog().
      * 
-     * @see #showDialog(java.util.function.Function, long, java.util.concurrent.TimeUnit) 
+     * @see #showDialog(Function, long, TimeUnit)
      * @return the return value of FileChooser.showOpenMultipleDialog()
      */
     public List<File> showOpenMultipleDialog() {

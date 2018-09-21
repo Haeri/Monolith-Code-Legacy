@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -79,7 +79,7 @@ public class ColumnsFlowLayout implements LayoutManager {
      *
      * @param target the specified component being laid out
      * @see Container
-     * @see       java.awt.Container#doLayout
+     * @see       Container#doLayout
      */
     public void layoutContainer(Container target) {
         synchronized (target.getTreeLock()) {
