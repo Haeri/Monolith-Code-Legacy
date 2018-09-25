@@ -2,6 +2,7 @@ plugins {
     id 'java'
 }
 
+group 'net.monolith' 
 version '0.0.9'
 
 sourceSets {

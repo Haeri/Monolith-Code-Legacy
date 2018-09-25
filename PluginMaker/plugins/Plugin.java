@@ -1,5 +1,7 @@
 package plugins;
 
+import javax.swing.JFrame;
+
 public interface Plugin {
     public PluginInfo getInfo();
     public ResponseData process(ContextData data);
@@ -12,6 +14,8 @@ public interface Plugin {
     }
 
     class ContextData {
+    	public JFrame frame;
+    	
         // Current document settings
         public String language;
         public String fileName;
