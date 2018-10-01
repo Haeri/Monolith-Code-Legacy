@@ -1,1 +1,5 @@
- language: java
+language: java
+
+deploy:
+  provider: script
+  script: bash deployer.sh $RELEASE_KEY
