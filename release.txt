@@ -1,5 +1,5 @@
-version:0.1.1
-build:81
+version:0.1.2
+build:82
 beta:true
 refresh:true
-Irgend ein Text sogar mit <strong>HTML zeugs</strong>
+Das is eine neue und bessere version!!!
