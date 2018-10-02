@@ -9,7 +9,7 @@ zip -r "../package.zip" *
 cd ..
 
 # read relese values from file
-version=$(grep -oP "^version:\k(.*)$" release.txt)
+version=$(grep -oP "^version:\K(.*)$" release.txt)
 build=$(grep -oP "^build:\K(.*)$" release.txt)
 beta=$(grep -oP "^beta:\K(.*)$" release.txt)
 refresh=$(grep -oP "^refresh:\K(.*)$" release.txt)
