@@ -24,7 +24,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  */
-package main.java.net.monolith;
+package net.monolith;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 public class LolCrypt {
 //	private static String p = String.valueOf(Math.PI);

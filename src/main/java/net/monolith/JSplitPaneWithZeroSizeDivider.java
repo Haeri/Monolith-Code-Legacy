@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 /*
  * Copyright (c) 2011 Karl Tauber <karl at jformdesigner dot com>
  * All rights reserved.

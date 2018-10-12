@@ -1,0 +1,10 @@
+version:0.1.0
+build:72
+beta:false
+refresh:true
+This release focuses on continous integration of the project. There should be no noticeable changes for the user.<br>
+<ul>
+<li><b>New:</b> New backend system ensures an automated deployment of new releases.</li>
+<li><b>New:</b> Updater now displays the changelog.</li>
+<li><b>Improvement:</b> Plugins now can have their own JFrame and freeze the main Frame for input.</li>
+</ul>

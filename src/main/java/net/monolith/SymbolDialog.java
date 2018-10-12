@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

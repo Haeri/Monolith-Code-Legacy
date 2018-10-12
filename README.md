@@ -1,5 +1,7 @@
-Monolith Code
+Monolith Code 
 ==================
+
+[![Build Status](https://travis-ci.org/Haeri/Monolith-Code.svg?branch=master)](https://travis-ci.org/Haeri/Monolith-Code)
 
 A beginner friendly, simple to use, light weight code editor in Java
 

@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 import dk.heick.properties.types.utils.CommentedProperties;
 

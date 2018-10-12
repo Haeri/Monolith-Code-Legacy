@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 import plugins.Plugin;
 
@@ -53,11 +53,18 @@ public class PluginManager {
         for (int i = 0; i < pluginList.size(); i++){
             final int index = i;
             tmp = new JMenuItem(pluginList.get(i).getInfo().name);
+            tmp.setToolTipText("<html>"
+                    + pluginList.get(i).getInfo().name
+                    + " v" + pluginList.get(i).getInfo().version
+                    + "<br>By: " + pluginList.get(i).getInfo().author
+                    + "<br>" + pluginList.get(i).getInfo().description
+                    + "</html>");
             menu.add(tmp);
             //pluginItems.add(tmp);
 
             tmp.addActionListener(event -> {
                 Plugin.ContextData context = new Plugin.ContextData();
+                context.frame = motherFrame;
                 context.fileName = motherFrame.getName();
                 context.language = motherFrame.getLanguage().name;
                 context.extension = motherFrame.getLanguage().extension;

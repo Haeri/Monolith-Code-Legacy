@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 import java.awt.Color;
 import java.awt.Graphics;

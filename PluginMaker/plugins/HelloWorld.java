@@ -1,5 +1,7 @@
 package plugins;
 
+import javax.swing.*;
+
 public class HelloWorld implements Plugin{
     private PluginInfo info;
 
@@ -20,7 +22,9 @@ public class HelloWorld implements Plugin{
     public ResponseData process(ContextData data) {
         ResponseData res = new ResponseData();
 
-        res.response = "LOL";
+        res.response = data.text;
+		JOptionPane.showMessageDialog(data.frame, "Hello World");
+        
         return res;
     }
 }

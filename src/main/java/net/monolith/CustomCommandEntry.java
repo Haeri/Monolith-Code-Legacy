@@ -1,4 +1,4 @@
-package main.java.net.monolith;
+package net.monolith;
 
 public class CustomCommandEntry {
 	public Language language;
