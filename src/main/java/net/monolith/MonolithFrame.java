@@ -129,6 +129,7 @@ public class MonolithFrame extends JFramePlus {
 	private BuildConsole    buildConsole;
 	private Document        document;
 	private BackgroundSave  backgroundSave;
+	private Updater			 updater;
 	private PluginManager   pluginManager;
 	
 	// Primitives
@@ -525,6 +526,10 @@ public class MonolithFrame extends JFramePlus {
 		backgroundSave = new BackgroundSave(this);
 		backgroundSave.start();
 
+		// Init Updaer
+		updater = new Updater(this);
+
+
 		// SHORTCUTS
 
 		// Save
@@ -888,7 +893,7 @@ public class MonolithFrame extends JFramePlus {
 		mUpdate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				updateMonolith(false);
+				updater.updateMonolith();
 			}
 		});
 		
@@ -1126,25 +1131,14 @@ public class MonolithFrame extends JFramePlus {
 		// Check for updates
 		if (isFirst) {
 			isFirst = false;
-			if (Updater.checkUpdate(this))
-				updateMonolith(true);
+			updater.start();
 		}
 		
 		console.printQueue();
 	}
 	
 	// Update
-	public void updateMonolith(boolean directInstall) {
-		try {
-			if (directInstall)
-				Runtime.getRuntime().exec("java -jar Updater.jar " + GlobalVariables.VERSION + " " + GlobalVariables.BUILD + " true");
-			else
-				Runtime.getRuntime().exec("java -jar Updater.jar " + GlobalVariables.VERSION + " " + GlobalVariables.BUILD + " false");
-		} catch (IOException e) {
-			console.println(e.getMessage(), Console.err);
-			if(GlobalVariables.debug) e.printStackTrace();
-		}
-	}
+
 
 	// History
 	public void undo() {
