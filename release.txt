@@ -1,5 +1,5 @@
 version:0.1.0
-build:74
+build:75
 beta:false
 refresh:false
-Reduced update checker initial delay.<br><ul><li><b>Fix:</b> Updater is now faster</li></ul>
+Hotfix.<br><ul><li><b>Fix:</b> Version out of sync</li></ul>
