@@ -13,7 +13,7 @@ public class Updater extends Thread{
 	public void run() {
 		// Delay check
 		try {
-			Thread.sleep(300);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			if (GlobalVariables.debug)
 				e.printStackTrace();

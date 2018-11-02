@@ -1,5 +1,5 @@
 version:0.1.0
-build:75
+build:76
 beta:false
 refresh:false
-Hotfix.<br><ul><li><b>Fix:</b> Version out of sync</li></ul>
+Much faster!<br><ul><li><b>Fix:</b> Update delay</li></ul>
