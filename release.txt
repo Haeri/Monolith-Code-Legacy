@@ -1,5 +1,5 @@
 version:0.1.0
-build:76
+build:77
 beta:false
 refresh:false
-Much faster!<br><ul><li><b>Fix:</b> Update delay</li></ul>
+Dummy Update<br><ul><li><b>Fix:</b> Nichts</li></ul>
