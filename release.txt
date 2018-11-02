@@ -1,5 +1,5 @@
 version:0.1.0
-build:73
+build:74
 beta:false
 refresh:false
-Updater should automatically detect if a new releaes is available.<br><ul><li><b>Fix:</b> Fixed Updater not detecting new release</li></ul>
+Reduced update checker initial delay.<br><ul><li><b>Fix:</b> Updater is now faster</li></ul>
