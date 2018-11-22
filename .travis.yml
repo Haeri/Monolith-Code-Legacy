@@ -1,8 +1,1 @@
 language: java
-
-deploy:
-  provider: script
-  script: bash deployer.sh $RELEASE_KEY
-  skip_cleanup: true
-  on:
-    branch: master

@@ -228,7 +228,7 @@ public class MonolithFrame extends JFramePlus {
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			InputStream is = getClass().getResourceAsStream(GlobalVariables.RESOURCE_PATH + "/Consolas.ttf");
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, is));
-		} catch (IOException | FontFormatException e) {
+		} catch (Exception e) {
 			console.queueError("Faild to load default font\n" + e.getMessage());
 			if(GlobalVariables.debug) e.printStackTrace();
 		}
