@@ -6,3 +6,8 @@ install:
 after_failure:
   - "echo Send Log"
   - "curl -F \"file=@output.txt\" http://monolith-code.net.tiberius.sui-inter.net/release/saveLog"
+
+deploy:
+  provider: script
+  script: bash deployer.sh $RELEASE_KEY
+  skip_cleanup: true
