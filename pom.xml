@@ -17,6 +17,17 @@
 		<directory>build</directory>
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>net.monolith.Main</mainClass>
+					<arguments>
+						<argument>argument1</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -49,8 +60,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.fifesoft</groupId>
-			<artifactId>rsyntaxtextarea</artifactId>
+			<groupId>com.fifesoft.local</groupId>
+			<artifactId>rsyntaxtextarea.local</artifactId>
 			<version>2.6.1</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/RSyntaxTextArea.jar</systemPath>
@@ -71,8 +82,8 @@
 			<version>1.7.10</version>
 		</dependency>
 		<dependency>
-			<groupId>dk.heick</groupId>
-			<artifactId>JHPropertiesTyped</artifactId>
+			<groupId>dk.heick.local</groupId>
+			<artifactId>JHPropertiesTyped.local</artifactId>
 			<version>2.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/jhpropertiestyped-2.0.jar</systemPath>

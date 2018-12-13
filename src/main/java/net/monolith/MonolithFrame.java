@@ -890,123 +890,84 @@ public class MonolithFrame extends JFramePlus {
 		// HELP
 		
 		// Check for updates
-		mUpdate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				updater.updateMonolith();
-			}
-		});
+		mUpdate.addActionListener(event -> updater.updateMonolith());
 		
 		// Help
-		mHelp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				JOptionPane.showMessageDialog(
-						MonolithFrame.this,
-						"<html><b>" + GlobalVariables.MONOLITH_NAME + " v" + GlobalVariables.VERSION + ":" + GlobalVariables.BUILD + "</b><br> by Haeri Studios &#9400;<br>For more information visit <br><a href='http://monolith-code.net.tiberius.sui-inter.net/'>monolith-code.net</a></html>",
-						GlobalVariables.MONOLITH_NAME,
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
+		mHelp.addActionListener(event -> JOptionPane.showMessageDialog(
+				MonolithFrame.this,
+				"<html><b>" + GlobalVariables.MONOLITH_NAME + " v" + GlobalVariables.VERSION + ":" + GlobalVariables.BUILD + "</b><br> by Haeri Studios &#9400;<br>For more information visit <br><a href='http://monolith-code.net.tiberius.sui-inter.net/'>monolith-code.net</a></html>",
+				GlobalVariables.MONOLITH_NAME,
+				JOptionPane.INFORMATION_MESSAGE));
 
 		// DEBUG
 
 		// Char to Int
-		mToInt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				String temp = getText();
-				String build = "";
-				for (int i = 0; i < temp.length(); i++) {
-					int temp2 = temp.charAt(i);
-					if (temp2 == 10) {
+		mToInt.addActionListener(event -> {
+			String temp = getText();
+			String build = "";
+			for (int i = 0; i < temp.length(); i++) {
+				switch (temp.charAt(i)) {
+					case 10:
 						build += "[LF]\n";
-					} else if (temp2 == 13) {
+						break;
+					case 13:
 						build += "[CR]";
-					} else if (temp2 == 9) {
+						break;
+					case 9:
 						build += "[tab]\t";
-					} else if (temp2 == 32) {
+						break;
+					case 32:
 						build += "[spc]\t";
-					} else {
-						build += temp2 + "\t";
-					}
+						break;
+					default:
+						build += temp.charAt(i) + "\t";
+						break;
 				}
-				new MonolithFrame(MonolithFrame.this).setText(build);
 			}
+			new MonolithFrame(MonolithFrame.this).setText(build);
 		});
 
 		// Show Paragraph
-		mPgrp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				String temp = getText();
-				AbstractButton aButton = (AbstractButton) event.getSource();
-				boolean selected = aButton.getModel().isSelected();
-				if (selected) {
-					temp = temp.replaceAll("(\n)", "\u00B6\u0080\n");
-					temp = temp.replaceAll("(\r)", "\u00B5\u0080\r");
-					temp = temp.replaceAll("(\t)", "\u0362\u0080\t");
-					temp = temp.replaceAll(" ", "\u00B7\u0080");
-				} else {
-					temp = temp.replaceAll("\u00B6\u0080\n", "\n");
-					temp = temp.replaceAll("\u00B5\u0080\r", "\r");
-					temp = temp.replaceAll("\u0362\u0080\t", "\t");
-					temp = temp.replaceAll("\u00B7\u0080", " ");
-				}
-
-				setText(temp);
-
+		mPgrp.addActionListener(event -> {
+			String temp = getText();
+			AbstractButton aButton = (AbstractButton) event.getSource();
+			boolean selected = aButton.getModel().isSelected();
+			if (selected) {
+				temp = temp.replaceAll("(\n)", "\u00B6\u0080\n");
+				temp = temp.replaceAll("(\r)", "\u00B5\u0080\r");
+				temp = temp.replaceAll("(\t)", "\u0362\u0080\t");
+				temp = temp.replaceAll(" ", "\u00B7\u0080");
+			} else {
+				temp = temp.replaceAll("\u00B6\u0080\n", "\n");
+				temp = temp.replaceAll("\u00B5\u0080\r", "\r");
+				temp = temp.replaceAll("\u0362\u0080\t", "\t");
+				temp = temp.replaceAll("\u00B7\u0080", " ");
 			}
+
+			setText(temp);
+
 		});
 
 		// LolCrypt
-		mCrypt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				setText((LolCrypt.crypt(getText())));
-			}
-		});
+		mCrypt.addActionListener(event -> setText((LolCrypt.crypt(getText()))));
 
 		// DeLolCrypt
-		mDeCrypt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				setText((LolCrypt.deCrypt(getText())));
-			}
-		});
+		mDeCrypt.addActionListener(event -> setText((LolCrypt.deCrypt(getText()))));
 
 		// Quick Table
-		mTable.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				Table.showSettingsDialog(MonolithFrame.this);
-			}
-		});
+		mTable.addActionListener(event -> Table.showSettingsDialog(MonolithFrame.this));
 
 		// Symbols
-		mSymbol.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				if (!SymbolDialog.modal)
-					SymbolDialog.showDialog(MonolithFrame.this);
-			}
+		mSymbol.addActionListener(event -> {
+			if (!SymbolDialog.modal)
+				SymbolDialog.showDialog(MonolithFrame.this);
 		});
 
 		// Console
-		mCon.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				toggleConsole();
-			}
-		});
+		mCon.addActionListener(event -> toggleConsole());
 
 		// Line Numbers
-		mLineB.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				toggleLineNumbers();
-			}
-		});
+		mLineB.addActionListener(event -> toggleLineNumbers());
 
 		// Drag&Drop
 		tField.setDropTarget(new DropTarget() {
@@ -1073,12 +1034,7 @@ public class MonolithFrame extends JFramePlus {
 		});
 
 		// Caret Position
-		tField.addCaretListener(new CaretListener() {
-			@Override
-			public void caretUpdate(CaretEvent carr) {
-				carretUpdate();
-			}
-		});
+		tField.addCaretListener(carr -> carretUpdate());
 
 		// Right click
 		tField.addMouseListener(new MouseListener() {
@@ -1133,7 +1089,7 @@ public class MonolithFrame extends JFramePlus {
 			isFirst = false;
 			updater.start();
 		}
-		
+
 		console.printQueue();
 	}
 	
@@ -1661,8 +1617,8 @@ public class MonolithFrame extends JFramePlus {
 		return language;
 	}
 
-	public void replaceSegemnt(int start, int end, String text){
-		if(start > end ) return;
+	public void replaceSegment(int start, int end, String text){
+		if(start > end ) { return; }
 
 		try{
 			document.insertString(end, text, null);
@@ -1698,8 +1654,9 @@ public class MonolithFrame extends JFramePlus {
 
 	private void initConsole(){
 		if (settings.<Boolean>getSetting(Settings.IS_CONSOLE)) {
-			if (dividerLocation != 0)
+			if (dividerLocation != 0) {
 				splitter.setDividerLocation(dividerLocation);
+			}
 			splitter.setBottomComponent(console);
 			splitter.setDividerSize(1);
 			updateMargin();
@@ -1715,6 +1672,7 @@ public class MonolithFrame extends JFramePlus {
 
 	// Empty Space Update
 	private void updateMargin() {
+
 		JViewport viewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, tField);
 	
 		if (viewport != null) {
