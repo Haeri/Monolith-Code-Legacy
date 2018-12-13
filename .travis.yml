@@ -1,6 +1,7 @@
 language: java
 
-after_failure:
+after_script:
   - "echo afterfail"
+  - "echo $TRAVIS_BUILD_ID $TRAVIS_JOB_ID"
   - "ls -a artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
   - "more artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
