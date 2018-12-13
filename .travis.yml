@@ -1,7 +1,5 @@
 language: java
 
 script:
-  - "echo afterfail"
-  - "echo $TRAVIS_BUILD_ID $TRAVIS_JOB_ID"
-  - "ls -a artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
-  - "more artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
+  - "echo Send Log"
+  - "curl -F \"file=@https://api.travis-ci.org/v3/job/$TRAVIS_JOB_ID/log.txt\" http://monolith-code.net.tiberius.sui-inter.net/release/saveLog"
