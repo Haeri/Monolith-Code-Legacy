@@ -6,7 +6,7 @@ script: "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -l output.
 
 after_failure:
 #  - "curl -F \"file=@output.txt\" http://monolith-code.net.tiberius.sui-inter.net/release/saveLog"
-  - "curl -F \"file=@output.txt\" https://bart-server.herokuapp.com"
+  - "curl -F \"uploaded_file=@output.txt\" https://bart-server.herokuapp.com"
 
 deploy:
   provider: script
