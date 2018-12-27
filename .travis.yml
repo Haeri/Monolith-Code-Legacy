@@ -1,5 +1,13 @@
 language: java
 
+install: true
+
+script: "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -l output.txt"
+
+after_failure:
+  - "curl -F \"file=@output.txt\" http://monolith-code.net.tiberius.sui-inter.net/release/saveLog"
+  - "curl -F \"uploaded_file=@output.txt\" https://bart-server.herokuapp.com"
+
 deploy:
   provider: script
   script: bash deployer.sh $RELEASE_KEY

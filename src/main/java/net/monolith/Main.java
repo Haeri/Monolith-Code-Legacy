@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.swing.SwingUtilities;
 
 public class Main {
-
 	public static void main(String[] args) {
 		try{		
 			Locale.setDefault(Locale.ENGLISH);

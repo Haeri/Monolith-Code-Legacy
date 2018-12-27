@@ -1,5 +1,5 @@
 version:0.1.0
-build:77
+build:78
 beta:false
 refresh:false
-Dummy Update<br><ul><li><b>Fix:</b> Nichts</li></ul>
+Nothing to see here.<br><ul><li><b>Fix:</b> Fixed internal project setup</li></ul>
