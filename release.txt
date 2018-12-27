@@ -1,5 +1,5 @@
 version:0.1.0
-build:78
+build:79
 beta:false
 refresh:false
-Nothing to see here.<br><ul><li><b>Fix:</b> Fixed internal project setup</li></ul>
+Ups :P

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # copy jar file
-cp "./build/libs/monolith.jar" "./Package/monolith.jar"
+cp "./build/monolith.jar" "./Package/monolith.jar"
 
 # zip package
 cd "./Package"
