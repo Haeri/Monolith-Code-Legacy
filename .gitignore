@@ -17,7 +17,7 @@ gradle-app.setting
 
 
 # From https://github.com/github/gitignore/blob/master/Java.gitignore
-*.class
+# *.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -114,4 +114,6 @@ autosave/
 .idea/artifacts/monolith.xml
 .idea/libraries/external.xml
 Monolith-Code.iml
-*.class
+PluginMaker/plugins/*.class
+# *.class
+!src/main/resources/*
