@@ -24,7 +24,14 @@ DOWNLOAD:
  
  
 SCREENSHOT: 
-![screenshot](http://monolith-code.net.tiberius.sui-inter.net/Upload/Monolith_Code_Gif.gif)
+ 
+Quick Compile 
+ 
+![quick-compile](http://monolith-code.net.tiberius.sui-inter.net/Upload/compile.gif)
+ 
+Inline Math 
+ 
+![inline-math](http://monolith-code.net.tiberius.sui-inter.net/Upload/math.gif)
  
  
 DEPENDENCIES (jar files included):
