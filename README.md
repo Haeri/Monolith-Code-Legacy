@@ -2,6 +2,7 @@ Monolith Code
 ==================
 
 [![Build Status](https://travis-ci.org/Haeri/Monolith-Code.svg?branch=master)](https://travis-ci.org/Haeri/Monolith-Code)
+[![Dlownload](https://img.shields.io/badge/download-latest-brightgreen.svg)](http://monolith-code.net.tiberius.sui-inter.net/release/latest)
 
 A beginner friendly, simple to use, light weight code editor in Java
 
@@ -23,7 +24,14 @@ DOWNLOAD:
  
  
 SCREENSHOT: 
-![screenshot](http://monolith-code.net.tiberius.sui-inter.net/Upload/Monolith_Code_Gif.gif)
+ 
+Quick Compile 
+ 
+![quick-compile](http://monolith-code.net.tiberius.sui-inter.net/Upload/compile.gif)
+ 
+Inline Math 
+ 
+![inline-math](http://monolith-code.net.tiberius.sui-inter.net/Upload/math.gif)
  
  
 DEPENDENCIES (jar files included):
