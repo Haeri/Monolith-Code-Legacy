@@ -1,5 +1,5 @@
-version:0.1.0
-build:80
+version:0.1.1
+build:81
 beta:false
 refresh:false
-This will work now! Promise <3
+Updated Fifesoft dependencies.<br><ul><li><b>Fix:</b> Fixed selection highlight not clearing correctly</li><li><b>Upgrade:</b> Using to RSyntaxTextArea version 3.0.0</li><li><b>Upgrade:</b> Using to Autocomplete version 3.0.0</li><li><b>Upgrade:</b> Using to LanguageSupport version 3.0.0</li></ul>

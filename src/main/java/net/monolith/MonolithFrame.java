@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,10 +81,7 @@ import javax.swing.text.Document;
 import org.fife.rsta.ac.LanguageSupportFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextScrollPane;
-import org.fife.ui.rtextarea.SearchContext;
-import org.fife.ui.rtextarea.SearchEngine;
+import org.fife.ui.rtextarea.*;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -1100,7 +1098,14 @@ public class MonolithFrame extends JFramePlus {
 					e.consume();
 					searchHighlight();
 				} else {
-					tField.clearMarkAllHighlights();
+					//tField.clearMarkAllHighlights();
+					try {
+						Method clearMarkAllHighlights = RTextArea.class.getDeclaredMethod("clearMarkAllHighlights");
+						clearMarkAllHighlights.setAccessible(true);
+						clearMarkAllHighlights.invoke(tField);
+					}catch(Exception ex){
+						if(GlobalVariables.debug) ex.printStackTrace();
+					}
 				}
 			}
 		});
