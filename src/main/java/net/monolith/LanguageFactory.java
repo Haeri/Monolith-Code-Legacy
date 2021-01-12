@@ -75,7 +75,7 @@ public class LanguageFactory {
 		LANG_CPP.runCommand[OSType.WIN.ordinal()] = "<path><name>.exe";
 		LANG_CPP.isCompilable = true;
 		LANG_CPP.isRunnable = true;
-		LANG_CPP.quickCode = "#include <iostream>\n\nusing namespace std;\n\nint main(){\n	cout << \"Hello World\" << endl;\n	return 0;\n}";
+		LANG_CPP.quickCode = "#include <iostream>\n\nint main(int argc, char *argv[]){\n	std::cout << \"Hello World\" << std::endl;\n	return 0;\n}";
 		LANG_CPP.extensionFilter = new ExtensionFilter("C++ File (*.cpp)", "*" + LANG_CPP.extension);
 		LANG_CPP.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS;
 		LANG_CPP.defaultSugetedName = "MyCppCode" + LANG_CPP.extension;
@@ -148,7 +148,7 @@ public class LanguageFactory {
 		LANG_PYTHON.runCommand[0] = "python -u <name>.py";
 		LANG_PYTHON.isCompilable = false;
 		LANG_PYTHON.isRunnable = true;
-		LANG_PYTHON.quickCode ="print \"Hello world\"";
+		LANG_PYTHON.quickCode ="print(\"Hello world\")";
 		LANG_PYTHON.extensionFilter = new ExtensionFilter("Python (*.py)", "*" + LANG_PYTHON.extension);
 		LANG_PYTHON.syntaxConstant = SyntaxConstants.SYNTAX_STYLE_PYTHON;
 		LANG_PYTHON.defaultSugetedName = "MyPythonCode" + LANG_PYTHON.extension;
