@@ -117,3 +117,4 @@ Monolith-Code.iml
 PluginMaker/plugins/*.class
 # *.class
 !src/main/resources/*
+MonolithCode.iml
